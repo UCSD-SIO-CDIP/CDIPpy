@@ -18,6 +18,14 @@ dependencies = [
 ]
 keywords = ["oceanography", "waves", "buoy", "data"]
 
+[project.optional-dependencies]
+dev = [
+    "black",
+    "coverage",
+    "flake8",
+    "pre-commit",
+]
+
 [project.urls]
 Homepage = "https://cdip.ucsd.edu"
 Source = "https://github.com/cdipsw/CDIPpy"
