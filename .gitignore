@@ -1,0 +1,9 @@
+# dev generated
+.venv
+.vscode
+.idea
+.DS_Store
+
+# build files
+**/*.egg-info
+**/__pycache__
