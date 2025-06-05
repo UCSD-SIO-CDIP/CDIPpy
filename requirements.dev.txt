@@ -1,6 +1,2 @@
-coverage
-debugpy
-flake8
 pre-commit
-pytest
 -e .
