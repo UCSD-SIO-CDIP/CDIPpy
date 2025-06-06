@@ -1,7 +1,7 @@
 """Methods for working with NDBC"""
 
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 import cdippy.url_utils as uu
 import cdippy.utils as cu
@@ -28,7 +28,7 @@ def get_stn_info(wmo_id):
 def get_wmo_id(stn):
     """Queries cdip wmo id table for a given station. Drops pickle file locally."""
     pkl_fl = "./WMO_IDS.pkl"
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     if now.minute == 23 or not os.path.isfile(pkl_fl):
         url = "/".join([cdip_base, "wmo_ids"])
         r = uu.read_url(url)

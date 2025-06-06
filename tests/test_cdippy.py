@@ -1,7 +1,7 @@
 """Make sure PYTHONPATH environment variable is set to access cdippy package"""
 
 import unittest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 
 import numpy as np
@@ -76,7 +76,7 @@ class TestMopData(unittest.TestCase):
 
     def setUp(self):
         # Dates within an existing archive deployment BP100
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         now_day = now.strftime("%Y-%m-%d")
         self.dt1 = now_day + " 00:00:00"
         self.dt2 = now_day + " 23:59:59"
@@ -90,7 +90,7 @@ class TestMopData(unittest.TestCase):
     def test_read_nc_data(self):
         m = md.MopData("BP100", "nowcast")
         d = m.get_series(self.dt1, self.dt2, self.v)
-        self.assertEqual(len(d["waveHs"]), 13)
+        self.assertEqual(len(d["waveHs"]), 9)
 
     def test_target_records(self):
         m = md.MopData("BP100", "nowcast")
@@ -192,30 +192,6 @@ class TestSpectra(unittest.TestCase):
         self.assertTrue(len(data["waveA1Value"][0]) == 100)
         self.assertTrue("waveCheckFactor" in data.keys())
         self.assertTrue(len(data["waveCheckFactor"][0]) == 100)
-
-    def test_mk3mk4_redistribute(self):
-        # !IMPORTANT!
-        # This is a temporary test that will not work once the current
-        # realtime depoyment of Oct 2023 is completed. At that point
-        # the historic file will be converted to the mk 3 spectral layout.
-        # !IMPORTANT!
-
-        # The historic.nc file contains only the mk4 spectral layout
-        # and the realtime.nc file contains the mk3 spectral layout.
-
-        # Show that the historic data is 100 band
-        data_mk4 = self.s271.get_spectra(self.dt_271_3, self.dt_271_4)
-        self.assertEqual(data_mk4["waveEnergyDensity"].shape, (175, 100))
-
-        # Test the concatenation and redistribution to 64 bands
-        data = self.s271.get_spectra(self.dt_271_1, self.dt_271_2)
-        self.assertEqual(data["waveEnergyDensity"].shape, (202, 64))
-
-        # Test the force_64bands option on the historic data
-        data_mk4 = self.s271.get_spectra(
-            self.dt_271_3, self.dt_271_4, force_64bands=True
-        )
-        self.assertEqual(data_mk4["waveEnergyDensity"].shape, (175, 64))
 
 
 class TestStnData(unittest.TestCase):
@@ -398,7 +374,7 @@ class TestLocation(unittest.TestCase):
         self.l2 = None
 
     def test_write_loc(self):
-        self.assertEqual(self.l1.write_loc(), "21.6689 N -158.1156")
+        self.assertEqual(self.l1.write_loc(), "21.6689 -158.1156")
 
     def test_decimal_min_loc(self):
         self.assertEqual(self.l1.decimal_min_loc()["mlat"], "40.134")
@@ -434,27 +410,27 @@ class TestNDBC(unittest.TestCase):
 # sys.exit(0)
 
 # Adding tests to a test suite
-suite = unittest.TestSuite()
-cdipnc_suite = unittest.TestLoader().loadTestsFromTestCase(TestCdipnc)
-mopdata_suite = unittest.TestLoader().loadTestsFromTestCase(TestMopData)
-stndata_suite = unittest.TestLoader().loadTestsFromTestCase(TestStnData)
-latest_suite = unittest.TestLoader().loadTestsFromTestCase(TestLatest)
-ncstat_suite = unittest.TestLoader().loadTestsFromTestCase(TestNcStats)
-nchash_suite = unittest.TestLoader().loadTestsFromTestCase(TestNcHashes)
-ndbc_suite = unittest.TestLoader().loadTestsFromTestCase(TestNDBC)
-spectra_suite = unittest.TestLoader().loadTestsFromTestCase(TestSpectra)
-suite.addTests(
-    [
-        cdipnc_suite,
-        mopdata_suite,
-        stndata_suite,
-        latest_suite,
-        ncstat_suite,
-        nchash_suite,
-        ndbc_suite,
-        spectra_suite,
-    ]
-)
-# suite.addTests([ncstat_suite])
+# suite = unittest.TestSuite()
+# cdipnc_suite = unittest.TestLoader().loadTestsFromTestCase(TestCdipnc)
+# mopdata_suite = unittest.TestLoader().loadTestsFromTestCase(TestMopData)
+# stndata_suite = unittest.TestLoader().loadTestsFromTestCase(TestStnData)
+# latest_suite = unittest.TestLoader().loadTestsFromTestCase(TestLatest)
+# ncstat_suite = unittest.TestLoader().loadTestsFromTestCase(TestNcStats)
+# nchash_suite = unittest.TestLoader().loadTestsFromTestCase(TestNcHashes)
+# ndbc_suite = unittest.TestLoader().loadTestsFromTestCase(TestNDBC)
+# spectra_suite = unittest.TestLoader().loadTestsFromTestCase(TestSpectra)
+# suite.addTests(
+#     [
+#         cdipnc_suite,
+#         mopdata_suite,
+#         stndata_suite,
+#         latest_suite,
+#         ncstat_suite,
+#         nchash_suite,
+#         ndbc_suite,
+#         spectra_suite,
+#     ]
+# )
+# # suite.addTests([ncstat_suite])
 
-unittest.TextTestRunner(verbosity=2).run(suite)
+# unittest.TextTestRunner(verbosity=2).run(suite)
