@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone
 from cdippy.stndata import StnData
 
 
@@ -24,7 +24,7 @@ class NcStats(StnData):
 
         self.date_modifieds = {}
         self.start = datetime.strptime("1975-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
-        self.end = datetime.utcnow()
+        self.end = datetime.now(timezone.utc)
         self.pub_set = "all"
 
     def make_stats(self) -> dict:

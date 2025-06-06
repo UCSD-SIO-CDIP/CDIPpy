@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 
 import netCDF4
@@ -146,7 +146,7 @@ class CDIPnc:
         if start is None:
             start = datetime(1975, 1, 1)
         if end is None:
-            end = datetime.utcnow()
+            end = datetime.now(timezone.utc)
         self.set_timespan(start, end)
         self.pub_set = self.get_pub_set(pub_set)  # Standardize the set name
         if apply_mask is not None:
@@ -598,7 +598,7 @@ class Latest(CDIPnc):
         CDIPnc.__init__(self, data_dir)
         self.labels = []  # - Holds stn labels, e.g. '100p1' for this instance
         # Set latest timespan (Latest_3day goes up to 30 minutes beyond now)
-        now_plus_30min = datetime.utcnow() + timedelta(minutes=30)
+        now_plus_30min = datetime.now(timezone.utc) + timedelta(minutes=30)
         # Using the unix epoch to catch all data in latest_3day in case the file is very old
         epoch = datetime.fromtimestamp(0)
         self.set_timespan(epoch, now_plus_30min)
