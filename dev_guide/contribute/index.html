@@ -67,6 +67,10 @@
     <li class="toctree-l3"><a class="reference internal" href="#testing">testing</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#documenting">documenting</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#_1"></a>
+    </li>
+        </ul>
     </li>
         </ul>
     </li>
@@ -106,7 +110,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="contributors-guide">Contributors guide</h1>
-<p>Thank you for considering making a contribution to CDIPpy! We welcome all types on contributions, including:</p>
+<p>Thank you for considering making a contribution to CDIPpy! We welcome all types of contributions, including:</p>
 <ul>
 <li><strong>new features</strong>: do you have a cool workflow or product that uses CDIP? We'd love to see it!</li>
 <li><strong>bug fixes</strong>: have you found something that doesn't work? We'd love help fixing it!</li>
@@ -114,7 +118,7 @@
 <li><strong>documentation and examples</strong>: we would love more examples of <code>cdippy</code> library usage</li>
 </ul>
 <h2 id="setting-up-your-git-workflow">Setting up your git workflow</h2>
-<p>This project uses a fork-and-contribute workflow. You will need to make your <a href="https://github.com/cdipsw/CDIPpy/fork">fork</a> of the repository to work in, and submit changes to CDIPpy via pull request. To set up your workflow, follow these instructions:</p>
+<p>This project uses a fork-and-pull-request workflow. You will need to make your <a href="https://github.com/cdipsw/CDIPpy/fork">fork</a> of the repository to work in, and submit changes to CDIPpy via pull request. To set up your workflow, follow these instructions:</p>
 <ol>
 <li>Fork the respository at <a href="https://github.com/cdipsw/CDIPpy/fork">https://github.com/cdipsw/CDIPpy/fork</a></li>
 <li>Clone the repository from  your fork <code>git clone https://github.com/{your_github_username}/CDIPpy.git</code> - this will add your own fork as your <code>origin</code> remote repo. <em>Note: If you already have the main fork cloned, skip to the next step and follow instuctions to add your fork as another remote.</em></li>
@@ -126,11 +130,99 @@ git remote -v
 </code></pre>
 <p>If this worked, the last command will show your fork as <code>origin</code> and CDIP's as <code>cdip</code> (or whatever you have named them, respectively).</p>
 <h2 id="making-your-changes">Making your changes</h2>
+<p>Before starting to develop, make sure you're working from the latest commit:</p>
+<pre><code class="language-bash">git checkout main # make sure this is cdip/main not your fork
+git pull
+git checkout -b example-branch
+</code></pre>
+<p>This will create a new branch called <code>example-branch</code> based on the lastest commit to <code>main</code>. Now you can start making your changes.  </p>
+<p>Any changes you plan to contribute should be sure to follow the project's style guide, testing structure, and be up-to-date with documentation.</p>
 <h3 id="linting">linting</h3>
+<p>First you'll need to make sure your code style matches the rest of <code>cdippy</code> by using the <code>flake8</code> linter to check for adherance to the <a href="https://peps.python.org/pep-0008/">PEP8</a> style guide:  </p>
+<pre><code class="language-bash">flake8 .
+</code></pre>
+<p>If this commnad is successful, your style is up to date! Otherwise, the output will indicate where in the project the style is not compliant. You can manually fix these style deviations, or use  a tool like <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> to autolint: </p>
+<pre><code class="language-bash">black .  
+</code></pre>
+<p>This project also provides a <a href="https://pre-commit.com/"><code>pre-commit</code></a> hook to manage style for you autmatically on every <code>git commit</code>. From  the porject root:</p>
+<pre><code class="language-bash">pre-commit install
+</code></pre>
+<p>When you run <code>git commit</code> from your repo with the pre-commit hook installed, <code>black</code> will attempt to autolint the code and <code>flake8</code> will verify the results; the commit will fail if style errors are found, and you will need to manually fix them and try to commit again.   </p>
 <h3 id="testing">testing</h3>
+<p>With very few exceptions, every change should be tested! Your contribution cannot be accepted with failing tests or with large volumes of untested code. This project uses <a href="https://docs.python.org/3/library/unittest.html"><code>unittest</code></a> and <a href="https://coverage.readthedocs.io/en/7.8.2/"><code>coverage</code></a> to check that the code is thoroughly tets.</p>
+<p>Make sure all tests pass by running <code>python -m unittest discover</code> from the project root. <br />
+Learn more about running specific tests or subsets from the <a href="https://docs.python.org/3/library/unittest.html"><code>unittest</code> docs</a>.</p>
+<p>Make sure test coverage is high by running <code>coverage run -m unittest discover</code>, which will run all tests and generate a file called <code>.coverage</code>. When tests have complete, run <code>coverage report</code>. The output of <code>report</code> will show what percentage of the code base was executed by the test suite - higher coverage means a more reliable library!</p>
+<p>Learn more about interpreting coverage reports from the <a href="https://coverage.readthedocs.io/en/7.8.2/">docs</a>.</p>
 <h3 id="documenting">documenting</h3>
+<p>Some contributions may require edits to the documentation,such as: new features, documentation for previously undocumented features, or changes to end behavior. This project uses <a href="https://www.mkdocs.org/"><code>mkdocs</code></a> to build a static site which is hosted on <a href="https://docs.github.com/en/pages">GitHub pages</a>. Before creating a pull request, be sure make any necessary changes to the documentation.</p>
+<hr />
+<p><strong>1) Edit a page</strong>
+Make edits to the <code>.md</code> file under <a href="https://github.com/cdipsw/CDIPpy/tree/main/docs">'/docs/'</a> which corresponds to the page you're editing</p>
+<hr />
+<p><strong>2) Make a new page or section</strong>
+To add new pages to navigation, you'll need to create a new <code>.md</code> file in  <code>/docs/</code> and edit <a href="https://github.com/cdipsw/CDIPpy/blob/main/mkdocs.yml"><code>mkdocs.yml</code></a> to include it.</p>
+<p>For example:<br />
+Create a new folder called "my_changes" and a file called "mychanges/change_1.md" under '/docs'.<br />
+Add it to the <code>nav</code> tag of <code>mkdocs.yml</code>:</p>
+<pre><code class="language-yml">nav:
+  - Home: index.md
+  - Quick start: quickstart.md
+  ...
+  - My changes:
+    - First change: my_changes/change_1.md
+</code></pre>
+<hr />
+<p><strong>3) Preview your changes</strong>
+You can preview your changes locally by running <code>mkdocs serve</code> and going to <a href="http://localhost:8000/">http://localhost:8000/</a>.</p>
+<hr />
+<p><strong>4) Using and building site macros</strong>
+Reusable site4 macros are defined in <code>./main.py</code>. The current list of supported macros are:</p>
+<ul>
+<li>Under construction banner: </li>
+</ul>
+<pre><code class="language-html">/* remove spaces between curly braces */
+{ { under_construction(&quot;Your text here&quot;) } }
+</code></pre>
+<div style="border-radius:6px; overflow:hidden; margin:1em 0; font-family:inherit; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+  <div style="background-color:#FFA500; color:black; padding:10px 12px; font-weight:bold; font-size:1.1em;">
+    🚧 <strong>UNDER CONSTRUCTION</strong> 🚧
+  </div>
+  <div style="background-color:rgba(255, 165, 0, 0.15); color:black; padding:10px 12px;">
+    Your text here
+  </div>
+</div>
+
+<hr />
+<p><strong>4) Publish your changes</strong>
+Publishing the updated documentation to the live site will be handled for you automatically by GitHub! If you're interested in how it works, read on, otherwise, skip to the next section.</p>
+<p>How publishing works:</p>
+<ol>
+<li>When you open a pull request with changes to either <code>mkdocs.yml</code> or the <code>/docs/</code> directory, <a href="https://github.com/cdipsw/CDIPpy/blob/main/.github/workflows/docs.yml">this workflow</a> will be triggered and will build the static site (html) and push it to a branch called <code>gh-pages</code>.</li>
+<li>If the build is successful, a new job will run which will serve the new source in <code>gh-pages</code>. </li>
+<li>You can view running and completed workflows <a href="https://github.com/cdipsw/CDIPpy/actions">here</a>.</li>
+</ol>
+<hr />
+<h4 id="_1"></h4>
 <h2 id="making-your-pull-request">Making your pull request</h2>
 <p>Once you are satisfied with your changes (or just ready to get more eyes on them), open a pull request at: <a href="https://github.com/cdipsw/CDIPpy/pulls">https://github.com/cdipsw/CDIPpy/pulls</a>.</p>
+<p>Step 1: open the pull request
+    a. select 'New pull request'
+    b. make sure the <code>base</code> branch is <code>cdipsw/CDIPpy/main</code>
+    c. choose a branch to compare - make sure you have selected "compare across forks" so that you can choose branches from your own fork
+    d. Click "Create pull request". 
+Step 2: edit the pull request
+    a. give your PR a descriptive title
+    b. tag any issues your PR resolves
+    c. provide a description with an overview of your changes and any details a reviewer might need to know.
+    d. verify that your changes look correct
+    e. Click "Create pull request"
+Step 3: meet merge criteria - the next step is to see if the PR build passes. Checks will should up on your PR page with a status (Not started, passed, failed, canceled, etc.)
+    a. all tests must pass
+    b. test coverage must meet the threshold
+    c. contributors must sign a CLA
+    d. one reviewer must approve the PR - optionally, you can request reviews from specific users from the top right of your PR page under "Reviewers". </p>
+<p>Once all status checks have turned green, the "merge" button will be enabled and the code can be merged into the <code>main</code> branch. Congrats, you've made a contribution!</p>
 <h2 id="get-help">Get help</h2>
 <p>If you have an idea but aren't sure how to implement it or would like others to weigh in, open an issue on GitHub at <a href="https://github.com/cdipsw/CDIPpy/issues">https://github.com/cdipsw/CDIPpy/issues</a>!</p>
               
