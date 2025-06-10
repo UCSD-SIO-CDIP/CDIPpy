@@ -1,3 +1,1 @@
-# 🚧 **UNDER CONSTRUCTION** 🚧
-
-This page is still being written.
+{{ under_construction("This page is still being developed.") }}
