@@ -31,11 +31,7 @@
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
           <a href=".." class="icon icon-home"> CDIPpy Docs
-        </a><div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
-  </form>
-</div>
+        </a>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
@@ -95,9 +91,18 @@
                 <h2 id="installation">Installation</h2>
 <p>To install CDIPpy locally, you can either<br />
 1.  clone the repository, navigate to the root directory, and run <code>pip install .</code> or <br />
-2. without cloning the repositorym, install from github: <code>pip install git+https://github.com/cdipsw/CDIPpy.git</code></p>
-<p>🚧 <strong>UNDER CONSTRUCTION</strong> 🚧</p>
-<p><em>TODO</em> add test snippet to check installation here</p>
+2. without cloning the repository, install from github:<br />
+<em>https: <code>pip install git+https://github.com/cdipsw/CDIPpy.git</code></em><br />
+<em>ssh: <code>pip install git+ssh://github.com/cdipsw/CDIPpy.git</code></em></p>
+<div style="border-radius:6px; overflow:hidden; margin:1em 0; font-family:inherit; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+  <div style="background-color:#FFA500; color:black; padding:10px 12px; font-weight:bold; font-size:1.1em;">
+    🚧 <strong>UNDER CONSTRUCTION</strong> 🚧
+  </div>
+  <div style="background-color:rgba(255, 165, 0, 0.15); color:black; padding:10px 12px;">
+    add test snippet to check installation here
+  </div>
+</div>
+
 <hr />
 <h2 id="development">Development</h2>
 <p>To set up a development copy of CDIPpy, install the project form source using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>:  </p>
@@ -106,7 +111,8 @@
 &gt;&gt;&gt; source activate .venv/bin/activate
 &gt;&gt;&gt; uv pip install -e .[dev]
 </code></pre>
-<h2 id="this-creates-a-local-virtual-environment-at-venv-and-installs-a-version-of-cdippy-that-is-editable-e-along-with-several-additional-dev-dependencies-dev">This creates a local, virtual environment at <code>./.venv</code>, and installs a version of CDIPpy that is editable (<code>-e</code>), along with several additional dev dependencies (<code>[dev]</code>).</h2>
+<p>This creates a local, virtual environment at <code>./.venv</code>, and installs a version of CDIPpy that is editable (<code>-e</code>), along with several additional dev dependencies (<code>[dev]</code>).</p>
+<hr />
 <h3 id="testing">Testing</h3>
 <p>This project uses python's built in <code>unittest</code> package. To run all tests: </p>
 <pre><code class="language-bash">&gt;&gt;&gt; python -m unittest discover
@@ -167,7 +173,6 @@
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
-      <script src="../search/main.js"></script>
     <script>
         jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
