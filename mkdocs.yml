@@ -1,0 +1,15 @@
+site_name: CDIPpy Docs
+theme:
+  name: readthedocs
+
+nav:
+  - Home: index.md
+  - Quick start: quickstart.md
+  - Users guide:
+    - Installation: user_guide/index.md
+    - Data access: user_guide/data_access.md
+    - Data visualization: user_guide/plotting.md
+  - Developers guide:
+    - Installation: dev_guide/index.md
+    - Contributing: dev_guide/contribute.md
+  - Examples: examples/index.md

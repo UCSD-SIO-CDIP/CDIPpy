@@ -23,7 +23,8 @@ dev = [
     "black",
     "coverage",
     "flake8",
-    "pre-commit",
+    "mkdocs",
+    "pre-commit"
 ]
 
 [project.urls]
