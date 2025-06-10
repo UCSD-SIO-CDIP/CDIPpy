@@ -1,8 +1,16 @@
 # Contributors guide
 - welcome contributions!
-- types on contributions
-- workflow
+- types of contributions
 
 ## Setting up your git workflow
 
-## Tips & tricks
+## Making your changes
+
+### linting
+### testing
+### documenting
+
+## Making your pull request
+
+
+## Get help
