@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Quick start - CDIPpy Docs</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Quick start";
+        var mkdocs_page_input_path = "quickstart.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> CDIPpy Docs
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Quick start</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Users guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../user_guide/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user_guide/data_access/">Data access</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../user_guide/plotting/">Data visualization</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../dev_guide/">Installation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../dev_guide/contribute/">Contributing</a>
+                  </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../examples/">Examples</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">CDIPpy Docs</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Quick start</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="installation">Installation</h2>
+<p>To install CDIPpy locally, you can either<br />
+1.  clone the repository, navigate to the root directory, and run <code>pip install .</code> or <br />
+2. without cloning the repositorym, install from github: <code>pip install git+https://github.com/cdipsw/CDIPpy.git</code></p>
+<p>🚧 <strong>UNDER CONSTRUCTION</strong> 🚧</p>
+<p><em>TODO</em> add test snippet to check installation here</p>
+<hr />
+<h2 id="development">Development</h2>
+<p>To set up a development copy of CDIPpy, install the project form source using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>:  </p>
+<pre><code class="language-bash">&gt;&gt;&gt; pip install uv
+&gt;&gt;&gt; uv venv
+&gt;&gt;&gt; source activate .venv/bin/activate
+&gt;&gt;&gt; uv pip install -e .[dev]
+</code></pre>
+<h2 id="this-creates-a-local-virtual-environment-at-venv-and-installs-a-version-of-cdippy-that-is-editable-e-along-with-several-additional-dev-dependencies-dev">This creates a local, virtual environment at <code>./.venv</code>, and installs a version of CDIPpy that is editable (<code>-e</code>), along with several additional dev dependencies (<code>[dev]</code>).</h2>
+<h3 id="testing">Testing</h3>
+<p>This project uses python's built in <code>unittest</code> package. To run all tests: </p>
+<pre><code class="language-bash">&gt;&gt;&gt; python -m unittest discover
+</code></pre>
+<p>To run with <a href="https://coverage.readthedocs.io/en/7.8.2/">coverage</a>:</p>
+<pre><code class="language-bash">&gt;&gt;&gt; coverage run -m unittest discover
+</code></pre>
+<p>To view the coverage report:</p>
+<pre><code class="language-bash">&gt;&gt;&gt; coverage report
+</code></pre>
+<hr />
+<h3 id="contributing">Contributing</h3>
+<p>Contributions are welcome and should be merged via pull request on the <code>main</code> branch from a forked repository. Before a PR can be merged, it needs to pass the following checks:</p>
+<ul>
+<li>all tests passed</li>
+<li>coverage &gt;= threshhold</li>
+<li>passes <a href="https://flake8.pycqa.org/en/latest/"><code>flake8</code></a> linter</li>
+<li>there must be at least one reviewer approval</li>
+<li>a CLA must be signed by the contributor, if this is their first commit</li>
+</ul>
+<p>If you do not wish you manually check the style for every commit, there is a pre-commit hook that can do it for you. After setting up CDIPpy for development, install the hook with: <code>pre-commit install</code>. The installed hook will auto-format the files in your commit with <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> and checked for any remaining format errors with <code>flake8</code>. </p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../user_guide/" class="btn btn-neutral float-right" title="Installation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../user_guide/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
