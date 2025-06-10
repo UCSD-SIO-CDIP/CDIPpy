@@ -106,17 +106,33 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="contributors-guide">Contributors guide</h1>
+<p>Thank you for considering making a contribution to CDIPpy! We welcome all types on contributions, including:</p>
 <ul>
-<li>welcome contributions!</li>
-<li>types of contributions</li>
+<li><strong>new features</strong>: do you have a cool workflow or product that uses CDIP? We'd love to see it!</li>
+<li><strong>bug fixes</strong>: have you found something that doesn't work? We'd love help fixing it!</li>
+<li><strong>code cleanup</strong>: some of this code is <em>really old</em>; if you have ideas for making if cleaner or more efficient, we want to hear them!</li>
+<li><strong>documentation and examples</strong>: we would love more examples of <code>cdippy</code> library usage</li>
 </ul>
 <h2 id="setting-up-your-git-workflow">Setting up your git workflow</h2>
+<p>This project uses a fork-and-contribute workflow. You will need to make your <a href="https://github.com/cdipsw/CDIPpy/fork">fork</a> of the repository to work in, and submit changes to CDIPpy via pull request. To set up your workflow, follow these instructions:</p>
+<ol>
+<li>Fork the respository at <a href="https://github.com/cdipsw/CDIPpy/fork">https://github.com/cdipsw/CDIPpy/fork</a></li>
+<li>Clone the repository from  your fork <code>git clone https://github.com/{your_github_username}/CDIPpy.git</code> - this will add your own fork as your <code>origin</code> remote repo. <em>Note: If you already have the main fork cloned, skip to the next step and follow instuctions to add your fork as another remote.</em></li>
+<li>Add the main fork as another remote (or your fork, if you cloned from the main fork). This will allow you to pull latest code from the main fork, but push your own development to your own fork:  </li>
+</ol>
+<pre><code class="language-bash">git add remote cdip https://github.com/{your_github_username}/CDIPpy.git
+git fetch cdip
+git remote -v
+</code></pre>
+<p>If this worked, the last command will show your fork as <code>origin</code> and CDIP's as <code>cdip</code> (or whatever you have named them, respectively).</p>
 <h2 id="making-your-changes">Making your changes</h2>
 <h3 id="linting">linting</h3>
 <h3 id="testing">testing</h3>
 <h3 id="documenting">documenting</h3>
 <h2 id="making-your-pull-request">Making your pull request</h2>
+<p>Once you are satisfied with your changes (or just ready to get more eyes on them), open a pull request at: <a href="https://github.com/cdipsw/CDIPpy/pulls">https://github.com/cdipsw/CDIPpy/pulls</a>.</p>
 <h2 id="get-help">Get help</h2>
+<p>If you have an idea but aren't sure how to implement it or would like others to weigh in, open an issue on GitHub at <a href="https://github.com/cdipsw/CDIPpy/issues">https://github.com/cdipsw/CDIPpy/issues</a>!</p>
               
             </div>
           </div><footer>
