@@ -1,15 +1,15 @@
 ## Installation
 To install CDIPpy locally, you can either  
 1.  clone the repository, navigate to the root directory, and run `pip install .` or   
-2. without cloning the repositorym, install from github: `pip install git+https://github.com/cdipsw/CDIPpy.git`
+2. without cloning the repository, install from github:  
+*https: `pip install git+https://github.com/cdipsw/CDIPpy.git`*  
+*ssh: `pip install git+ssh://github.com/cdipsw/CDIPpy.git`*
 
-🚧 **UNDER CONSTRUCTION** 🚧
-
-*TODO* add test snippet to check installation here
+{{ under_construction("add test snippet to check installation here") }}
 
 ---
 
-## Development
+## Development  
 To set up a development copy of CDIPpy, install the project form source using [`uv`](https://docs.astral.sh/uv/):  
 ``` bash
 >>> pip install uv
@@ -17,9 +17,10 @@ To set up a development copy of CDIPpy, install the project form source using [`
 >>> source activate .venv/bin/activate
 >>> uv pip install -e .[dev]
 ```
-This creates a local, virtual environment at `./.venv`, and installs a version of CDIPpy that is editable (`-e`), along with several additional dev dependencies (`[dev]`).
----
 
+This creates a local, virtual environment at `./.venv`, and installs a version of CDIPpy that is editable (`-e`), along with several additional dev dependencies (`[dev]`).
+
+---
 ### Testing
 This project uses python's built in `unittest` package. To run all tests: 
 ~~~ bash

@@ -5,8 +5,8 @@ This page contains instructions for CDIPpy users who just want to navigate, acce
 There are few options for installing `CDIPpy`:
 
 1) Install from PyPI (easiest):
-🚧 **UNDER CONSTRUCTION** 🚧  
-Publishing to PyPI would allow users to install with just `pip install cdippy  
+{{ under_construction("TODO: Publishing to PyPI would allow users to install with just `pip install cdippy`") }}
+
 
  2) Install from source (for developing or local control of library):  
  **Pre-requisite:** [`git`](https://git-scm.com/doc) must be installed  
@@ -19,7 +19,7 @@ Publishing to PyPI would allow users to install with just `pip install cdippy
 ---
 
 ## Contained in this library
-🚧 **UNDER CONSTRUCTION** 🚧
+{{ under_construction("This section is still being developed.") }}
 
 *TODO* Work on a comprehensive list of tools/features/uses of this library
 

@@ -24,6 +24,7 @@ dev = [
     "coverage",
     "flake8",
     "mkdocs",
+    "mkdocs-macros-plugin",
     "pre-commit"
 ]
 

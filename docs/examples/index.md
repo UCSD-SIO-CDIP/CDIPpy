@@ -1,3 +1,2 @@
-# 🚧 **UNDER CONSTRUCTION** 🚧
 
-This section is still being developed.
+{{ under_construction("This section is still being developed.") }}
