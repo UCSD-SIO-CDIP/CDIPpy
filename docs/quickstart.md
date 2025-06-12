@@ -1,8 +1,8 @@
 ## Installation
-To install CDIPpy locally, you can either
-1. Clone the repository, navigate to the root directory, and run `pip install .` or
-2. Without cloning the repository, install from github:
-*https: `pip install git+https://github.com/cdipsw/CDIPpy.git`*
+To install CDIPpy locally, you can either  
+1. Clone the repository, navigate to the root directory, and run `pip install .` or  
+2. Without cloning the repository, install from github:  
+*https: `pip install git+https://github.com/cdipsw/CDIPpy.git`*  
 *ssh: `pip install git+ssh://github.com/cdipsw/CDIPpy.git`*
 
 {{ under_construction("add test snippet to check installation here") }}

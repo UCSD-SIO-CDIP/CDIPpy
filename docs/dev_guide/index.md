@@ -24,7 +24,7 @@ Navigate to the project root dirctory ('CDIPpy/') and run the following:
 The `--extra dev` specifier installs the packages requires to run tests, lint, and build documentation.
 
 ### testing
-You can check that your dev installation was successful by running unit tests from the root directory: `python -m unittest discover`.
+You can check that your dev installation was successful by running unit tests from the root directory: `python -m unittest discover`.  
 This runs every test in the library; you should see all successful tests.
 
 Learn more about running specific tests or subsets from the [`unittest` docs](https://docs.python.org/3/library/unittest.html).
