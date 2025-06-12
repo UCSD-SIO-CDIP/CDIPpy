@@ -13,7 +13,7 @@ This project uses a fork-and-pull-request workflow. You will need to make your [
 2. Clone the repository from  your fork `git clone https://github.com/{your_github_username}/CDIPpy.git` - this will add your own fork as your `origin` remote repo. *Note: If you already have the main fork cloned, skip to the next step and follow instuctions to add your fork as another remote.*
 3. Add the main fork as another remote (or your fork, if you cloned from the main fork). This will allow you to pull latest code from the main fork, but push your own development to your own fork:  
 ```bash
-git add remote cdip https://github.com/{your_github_username}/CDIPpy.git
+git add remote cdip https://github.com/cdipsw/CDIPpy.git
 git fetch cdip
 git remote -v
 ```
