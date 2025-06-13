@@ -17,11 +17,11 @@ It is recommended to us [`uv`](https://docs.astral.sh/uv/) to manage you develop
 
 Navigate to the project root dirctory ('CDIPpy/') and run the following:
 ``` bash
->>> pip install uv # install uv pacakge manager
->>> uv sync --extra dev # create a virtual envionment at CDIPpy/.venv/, install the source code, its runtime dependencies and it's dev dependencies defined in pyproject.toml.
->>> source .venv/bin/activate # activate the environment
+>>> pip install uv  # install uv pacakge manager
+>>> uv sync  # create a virtual envionment at CDIPpy/.venv/, install the source code, its runtime dependencies and it's dev dependencies defined in pyproject.toml.
+>>> source .venv/bin/activate  # activate the environment
 ```
-The `--extra dev` specifier installs the packages requires to run tests, lint, and build documentation.
+To exclude the development dpendancies, you can run `uv sync --no-dev`.
 
 ### testing
 You can check that your dev installation was successful by running unit tests from the root directory: `python -m unittest discover`.  

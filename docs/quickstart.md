@@ -13,7 +13,7 @@ To install CDIPpy locally, you can either
 To set up a development copy of CDIPpy, install the project form source using [`uv`](https://docs.astral.sh/uv/):
 ``` bash
 >>> pip install uv
->>> uv sync --extra dev
+>>> uv sync
 >>> source .venv/bin/activate
 ```
 
