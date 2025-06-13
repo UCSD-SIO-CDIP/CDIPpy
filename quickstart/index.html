@@ -90,8 +90,8 @@
               
                 <h2 id="installation">Installation</h2>
 <p>To install CDIPpy locally, you can either<br />
-1.  clone the repository, navigate to the root directory, and run <code>pip install .</code> or <br />
-2. without cloning the repository, install from github:<br />
+1. Clone the repository, navigate to the root directory, and run <code>pip install .</code> or<br />
+2. Without cloning the repository, install from github:<br />
 <em>https: <code>pip install git+https://github.com/cdipsw/CDIPpy.git</code></em><br />
 <em>ssh: <code>pip install git+ssh://github.com/cdipsw/CDIPpy.git</code></em></p>
 <div style="border-radius:6px; overflow:hidden; margin:1em 0; font-family:inherit; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
@@ -105,19 +105,18 @@
 
 <hr />
 <h2 id="development">Development</h2>
-<p>To set up a development copy of CDIPpy, install the project form source using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>:  </p>
+<p>To set up a development copy of CDIPpy, install the project form source using <a href="https://docs.astral.sh/uv/"><code>uv</code></a>:</p>
 <pre><code class="language-bash">&gt;&gt;&gt; pip install uv
-&gt;&gt;&gt; uv venv
-&gt;&gt;&gt; source activate .venv/bin/activate
-&gt;&gt;&gt; uv pip install -e .[dev]
+&gt;&gt;&gt; uv sync
+&gt;&gt;&gt; source .venv/bin/activate
 </code></pre>
-<p>This creates a local, virtual environment at <code>./.venv</code>, and installs a version of CDIPpy that is editable (<code>-e</code>), along with several additional dev dependencies (<code>[dev]</code>).</p>
+<p>This creates a local, virtual environment at <code>./.venv</code> and installs a version of CDIPpy along with several additional <code>dev</code> dependencies defined in the pyproject.toml file.</p>
 <hr />
 <h3 id="testing">Testing</h3>
-<p>This project uses python's built in <code>unittest</code> package. To run all tests: </p>
+<p>This project uses python's built in <code>unittest</code> package. To run all tests:</p>
 <pre><code class="language-bash">&gt;&gt;&gt; python -m unittest discover
 </code></pre>
-<p>To run with <a href="https://coverage.readthedocs.io/en/7.8.2/">coverage</a>:</p>
+<p>To run with <a href="https://coverage.readthedocs.io/en/latest/"><code>coverage</code></a>:</p>
 <pre><code class="language-bash">&gt;&gt;&gt; coverage run -m unittest discover
 </code></pre>
 <p>To view the coverage report:</p>
@@ -133,7 +132,7 @@
 <li>there must be at least one reviewer approval</li>
 <li>a CLA must be signed by the contributor, if this is their first commit</li>
 </ul>
-<p>If you do not wish you manually check the style for every commit, there is a pre-commit hook that can do it for you. After setting up CDIPpy for development, install the hook with: <code>pre-commit install</code>. The installed hook will auto-format the files in your commit with <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> and checked for any remaining format errors with <code>flake8</code>. </p>
+<p>If you do not wish you manually check the style for every commit, there is a pre-commit hook that can do it for you. After setting up CDIPpy for development, install the hook with: <code>pre-commit install</code>. The installed hook will auto-format the files in your commit with <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> and checked for any remaining format errors with <code>flake8</code>.</p>
               
             </div>
           </div><footer>
