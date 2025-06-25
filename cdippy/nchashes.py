@@ -7,10 +7,9 @@ class NcHashes:
 
     hashes_url = "http://cdip.ucsd.edu/data_access/metadata/wavecdf_by_datemod.txt"
     new_hashes = {}
-    hash_pkl = "HASH.pkl"
 
-    def __init__(self):
-        self.load_hash_table()
+    def __init__(self, hash_file_location=""):
+        self.hash_pkl = hash_file_location + "/HASH.pkl"
 
     def load_hash_table(self):
         lines = uu.read_url(self.hashes_url).strip().split("\n")
@@ -36,7 +35,7 @@ class NcHashes:
         changed = []
         if old_hashes:
             if len(self.new_hashes) == 0:
-                self.load_hash_table()
+                return []
             for key in self.new_hashes:
                 if key not in old_hashes.keys() or (
                     key in old_hashes.keys() and old_hashes[key] != self.new_hashes[key]

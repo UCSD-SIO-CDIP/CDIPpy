@@ -503,7 +503,7 @@ class StnData(CDIPnc):
         return result
 
     def get_nc_files(self, types: list = nc_file_types) -> dict:
-        """Returns dict of netcdf4 objects of a station's netcdf files"""
+        """Returns dict of netCDF4 objects of a station's netcdf files"""
         result = {}
         for ftype in types:
             if ftype == "historic":
