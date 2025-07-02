@@ -284,6 +284,7 @@ class MopData(CDIPnc):
         # i_b will be possibly one more than the last index
         i_b = min(i_b, last_idx)
         # Target timestamp is exactly equal to a data time
+        closest_idx = None
         if i_b == last_idx or stamps[i_b] == target_timestamp:
             closest_idx = i_b
         elif i_b > 0:
