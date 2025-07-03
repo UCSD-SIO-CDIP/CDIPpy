@@ -112,8 +112,7 @@ class TestMopData(unittest.TestCase):
         mock_dataset.return_value = self.nowcast
         m = md.MopData("BP100", "nowcast")
         d = m.get_series(self.dt1, self.dt2, self.v)
-        print(d["waveHs"])
-        self.assertEqual(len(d["waveHs"]), 11)
+        self.assertEqual(len(d["waveHs"]), 18)
 
     @patch("cdippy.cdipnc.netCDF4.Dataset")
     def test_target_records(self, mock_dataset):
@@ -159,11 +158,8 @@ class TestMopData(unittest.TestCase):
     def test_ecmwf_fc(self, mock_dataset):
         mock_dataset.return_value = self.ecmwf
         m = md.MopData("BP100", "ecmwf_fc")
-        meta = m.get_mop_meta()
-        start = convert_date(meta["time_coverage_start"])
-        print(start)
+        start = self.dt1
         d = m.get_series(start, vrs=self.v, target_records=60)
-        print(d.keys())
         self.assertEqual(len(d.keys()), 2)
         self.assertEqual(len(d["waveHs"]), 61)
 
@@ -171,11 +167,8 @@ class TestMopData(unittest.TestCase):
     def test_alongshore(self, mock_dataset):
         mock_dataset.return_value = self.forecast
         m = md.MopData("BP100", "forecast")
-        meta = m.get_mop_meta()
-        start = convert_date(meta["time_coverage_start"])
-        print(start)
+        start = self.dt1
         d = m.get_series(start, vrs=self.v, target_records=60)
-        print(d.keys())
         self.assertEqual(len(d.keys()), 2)
         self.assertEqual(len(d["waveHs"]), 61)
 

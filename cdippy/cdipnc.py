@@ -148,7 +148,7 @@ class CDIPnc:
             is set to True, only nonpub records will be returned.
         """
         if start is None:
-            start = datetime(1975, 1, 1)
+            start = datetime(1975, 1, 1).replace(tzinfo=timezone.utc)
         if end is None:
             end = datetime.now(timezone.utc)
         self.set_timespan(start, end)
@@ -160,14 +160,19 @@ class CDIPnc:
     def set_timespan(self, start, end):
         """Sets request timespan"""
         if isinstance(start, str):
-            self.start_dt = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
+            self.start_dt = datetime.strptime(start, "%Y-%m-%d %H:%M:%S").replace(
+                tzinfo=timezone.utc
+            )
         else:
             self.start_dt = start
         if isinstance(end, str):
-            self.end_dt = datetime.strptime(end, "%Y-%m-%d %H:%M:%S")
+            self.end_dt = datetime.strptime(end, "%Y-%m-%d %H:%M:%S").replace(
+                tzinfo=timezone.utc
+            )
         else:
             self.end_dt = end
         self.start_stamp = cu.datetime_to_timestamp(self.start_dt)
+
         self.end_stamp = cu.datetime_to_timestamp(self.end_dt)
 
     def get_request(self) -> dict:

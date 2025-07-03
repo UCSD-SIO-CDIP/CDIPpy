@@ -1,7 +1,7 @@
 import os
 import errno
 import pickle as pkl
-import time
+import calendar
 from datetime import datetime
 import pytz
 
@@ -71,7 +71,7 @@ def cdip_datetime(cdip_str: str) -> datetime:
 
 
 def datetime_to_timestamp(dt: datetime) -> int:
-    return time.mktime(dt.timetuple())
+    return calendar.timegm(dt.utctimetuple())
 
 
 def timestamp_to_datetime(ts: int) -> datetime:
