@@ -160,7 +160,6 @@ class TestMopData(unittest.TestCase):
         m = md.MopData("BP100", "ecmwf_fc")
         start = self.dt1
         d = m.get_series(start, vrs=self.v, target_records=60)
-        print(d.keys())
         self.assertEqual(len(d.keys()), 2)
         self.assertEqual(len(d["waveHs"]), 61)
 
@@ -170,7 +169,6 @@ class TestMopData(unittest.TestCase):
         m = md.MopData("BP100", "forecast")
         start = self.dt1
         d = m.get_series(start, vrs=self.v, target_records=60)
-        print(d.keys())
         self.assertEqual(len(d.keys()), 2)
         self.assertEqual(len(d["waveHs"]), 61)
 
