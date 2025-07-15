@@ -9,6 +9,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+  "matplotlib",
   "numpy",
   "netCDF4",
   "pandas",
@@ -34,5 +35,6 @@ dev = [
     "flake8",
     "mkdocs",
     "mkdocs-macros-plugin",
+    "mkdocstrings[python]",
     "pre-commit",
 ]

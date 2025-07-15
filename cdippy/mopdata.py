@@ -2,8 +2,8 @@ from datetime import datetime, timedelta, timezone
 from bisect import bisect_left
 
 from cdippy.cdipnc import CDIPnc
-import cdippy.timestamp_utils as tsu
-import cdippy.utils as cu
+import cdippy.utils.utils as tsu
+import cdippy.utils.utils as cu
 
 
 class MopData(CDIPnc):
@@ -300,7 +300,3 @@ class MopData(CDIPnc):
 
         # If we get to here there's a problem
         return (None, None, None)
-
-
-if __name__ == "__main__":
-    pass
