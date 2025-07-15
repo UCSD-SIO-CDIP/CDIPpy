@@ -6,8 +6,8 @@ import cdippy.mopdata as md
 # import cdippy.mopdata as md
 import cdippy.ncstats as ns
 import cdippy.nchashes as nh
-import cdippy.url_utils as uu
-import cdippy.location as loc
+import cdippy.utils.urls as uu
+import cdippy.utils.location as loc
 import cdippy.ndbc as ndbc
 import cdippy.spectra as sp
 
