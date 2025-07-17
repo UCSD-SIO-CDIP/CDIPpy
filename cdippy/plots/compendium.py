@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 
 def make_plot(
-    stns: str, start: datetime, end: datetime, params: str, x_inch: int
+    stns: str, start: datetime, end: datetime, params: str, x_inch: int = None
 ) -> tuple:
     """CDIP's classic compendium plot for multiple stations and parameters.
 

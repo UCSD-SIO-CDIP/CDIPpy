@@ -14,7 +14,7 @@ mpl.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
 
-def make_plot(stn: str, x_inch: int = None, y_inch: int = None):
+def make_plot(stn: str, x_inch: int = None, y_inch: int = None) -> tuple:
     """
     Year-long Climatology of Sea Surface Temperature across all years of available data for a station.
 
