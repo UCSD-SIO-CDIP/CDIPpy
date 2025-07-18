@@ -3,19 +3,13 @@ import cdippy.utils.utils as cdip_utils
 
 
 class NcHashes:
-    """
-    A class that checks for changes to datasets since by reading the online list of historic netCDF file hashes.
-    """
+    """Methods for working with the online list of historic nc file hashes."""
 
     hashes_url = "http://cdip.ucsd.edu/data_access/metadata/wavecdf_by_datemod.txt"
     new_hashes = {}
 
-    def __init__(self):
-        """
-        Args:
-            hash_file_location (str, optional): A path to the location to store the local copy of HASH.pkl. Defaults to the current directory.
-        """
-        self.load_hash_table()
+    def __init__(self, hash_file_location=""):
+        self.hash_pkl = hash_file_location + "/HASH.pkl"
 
     def load_hash_table(self):
         lines = url_utils.read_url(self.hashes_url).strip().split("\n")
@@ -27,14 +21,17 @@ class NcHashes:
                 continue
             self.new_hashes[fields[0]] = fields[6]
 
-    def compare_hash_tables(self) -> list:
-        """
-        Compare the current in-memory list of files, loaded by `load_hash_table` to the list saved in HASH.pkl and return a list of stations that are new or have changed.
+    def get_last_deployment(self, stn: str) -> str:
+        """Returns the last deployment string, e.g. 'd03'."""
+        last_deployment = "d00"
+        for name in self.new_hashes:
+            if name[0:5] == stn and name[5:7] == "_d" and last_deployment < name[6:9]:
+                last_deployment = name[6:9]
+        return last_deployment
 
-        Returns:
-            changed ([str]): A list of nc files that have changed or are since HASH.pkl was last saved.
-        """
-        old_hashes = self._get_old_hashes()
+    def compare_hash_tables(self) -> list:
+        """Return a list of nc files that have changed or are new."""
+        old_hashes = self.get_old_hashes()
         changed = []
         if old_hashes:
             if len(self.new_hashes) == 0:
