@@ -21,8 +21,8 @@ keywords = ["oceanography", "waves", "buoy", "data"]
 Homepage = "https://cdip.ucsd.edu"
 Source = "https://github.com/cdipsw/CDIPpy"
 
-[tool.setuptools]
-packages = ["cdippy"]
+[tool.setuptools.packages.find]
+where = ["."]
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -36,5 +36,9 @@ dev = [
     "mkdocs",
     "mkdocs-macros-plugin",
     "mkdocstrings[python]",
+    "mkdocs-material",
+    "mkdocstrings[python]",
+    "nbval",
     "pre-commit",
+    "pytest",
 ]
