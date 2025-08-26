@@ -54,7 +54,7 @@ class NcStats(StnData):
         return result
 
     def load_nc_files(self, types: list = ["realtime", "historic", "archive"]) -> dict:
-        """Returns netcdf4 objects of a station's netcdf files"""
+        """Returns netCDF4 objects of a station's netcdf files"""
         self.nc_files = self.get_nc_files(types)
 
     def load_file(self, nc_filename: str):

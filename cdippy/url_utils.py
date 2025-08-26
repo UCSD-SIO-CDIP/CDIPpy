@@ -1,7 +1,31 @@
 """Methods for working with urllib scraping web pages"""
 
+import logging
+import tomllib
+from urllib import request, error
 import xml.etree.ElementTree as ET
-import urllib.request
+
+with open("pyproject.toml", "rb") as f:
+    pyproject = tomllib.load(f)
+
+version = pyproject["project"]["version"]
+cdippy_lib = f"CDIPpy/{version}"
+
+_headers = {"User-Agent": cdippy_lib}
+logger = logging.getLogger(__name__)
+
+
+def _make_cdippy_request(url):
+    req = request.Request(url, headers=_headers)
+    try:
+        return request.urlopen(req)
+    except error.URLError as e:
+        logger.exception(f"URL error: {e.reason}")
+    except error.HTTPError as e:
+        logger.exception(f"HTTP error: request to {url} returned {e.code} - {e.reason}")
+    except Exception as e:
+        logger.exception(e)
+    return None
 
 
 def rfindta(el, r, tag, attr):
@@ -24,23 +48,11 @@ def rfindt(el, r, tag):
         r.append(el.text)
 
 
-def url_exists(url):
-    req = urllib.request.Request(url)
-    try:
-        urllib.request.urlopen(req)
-    except Exception:
-        return False
-    else:
-        return True
-
-
 def read_url(url):
-    try:
-        r = urllib.request.urlopen(url).read().decode("UTF-8")
-    except Exception:
-        return None
-    return r
+    response = _make_cdippy_request(url)
+    return response.read().decode("UTF-8") if response else None
 
 
 def load_et_root(url):
-    return ET.fromstring(urllib.request.urlopen(url).read())
+    response = _make_cdippy_request(url)
+    return ET.fromstring(response.read()) if response else None

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from bisect import bisect_left
 
 from cdippy.cdipnc import CDIPnc
@@ -235,7 +235,9 @@ class MopData(CDIPnc):
 
         if start is not None and end is None:  # Target time
             if isinstance(start, str):
-                start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
+                start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S").replace(
+                    tzinfo=timezone.utc
+                )
             ts_I = self.get_target_timespan(
                 cu.datetime_to_timestamp(start), target_records, prefix + "Time"
             )
@@ -284,6 +286,7 @@ class MopData(CDIPnc):
         # i_b will be possibly one more than the last index
         i_b = min(i_b, last_idx)
         # Target timestamp is exactly equal to a data time
+        closest_idx = None
         if i_b == last_idx or stamps[i_b] == target_timestamp:
             closest_idx = i_b
         elif i_b > 0:
