@@ -14,8 +14,8 @@ from cdippy.cdipnc import (
     Active,
     ActiveXY,
 )
-import cdippy.utils.utils as cu
-import cdippy.spectra as sp
+import cdippy.utils.utils as cdip_utils
+from cdippy.spectra import Spectra
 
 
 class StnData(CDIPnc):
@@ -249,11 +249,11 @@ class StnData(CDIPnc):
             if isinstance(start, str):
                 start = datetime.strptime(start, "%Y-%m-%d %H:%M:%S")
             ts_I = self.get_target_timespan(
-                cu.datetime_to_timestamp(start), target_records, prefix + "Time"
+                cdip_utils.datetime_to_timestamp(start), target_records, prefix + "Time"
             )
             if ts_I[0] is not None:
-                start = cu.timestamp_to_datetime(ts_I[0])
-                end = cu.timestamp_to_datetime(ts_I[1])
+                start = cdip_utils.timestamp_to_datetime(ts_I[0])
+                end = cdip_utils.timestamp_to_datetime(ts_I[1])
             else:
                 return None
         elif start is None:  # Use default 3 days back
@@ -301,7 +301,7 @@ class StnData(CDIPnc):
                 dicts = [dict1, dict2]
                 for i, shape in enumerate(shapes):
                     if shape == 100:
-                        spectra_obj = sp.Spectra()
+                        spectra_obj = Spectra()
                         spectra_obj.set_spectrumArr_fromQuery(dicts[i])
                         spectra_obj.redist_specArr("Spectrum_64band")
                         redistributed_dict = spectra_obj.specArr_ToDict()
@@ -320,10 +320,12 @@ class StnData(CDIPnc):
         return result
 
     def __merge_archive_helper(self, cdip_nc: CDIPnc, result):
-        file_start_stamp = cu.datetime_to_timestamp(cdip_nc.get_coverage_start())
-        file_end_stamp = cu.datetime_to_timestamp(cdip_nc.get_coverage_end())
-        file_timespan = cu.Timespan(file_start_stamp, file_end_stamp)
-        request_timespan = cu.Timespan(self.start_stamp, self.end_stamp)
+        file_start_stamp = cdip_utils.datetime_to_timestamp(
+            cdip_nc.get_coverage_start()
+        )
+        file_end_stamp = cdip_utils.datetime_to_timestamp(cdip_nc.get_coverage_end())
+        file_timespan = cdip_utils.Timespan(file_start_stamp, file_end_stamp)
+        request_timespan = cdip_utils.Timespan(self.start_stamp, self.end_stamp)
         if request_timespan.overlap(file_timespan):
             cdip_nc.start_stamp = self.start_stamp
             cdip_nc.end_stamp = self.end_stamp
@@ -336,7 +338,7 @@ class StnData(CDIPnc):
         return result, file_start_stamp
 
     def __merge_xyz_helper(
-        self, cdip_nc: CDIPnc, request_timespan: cu.Timespan, result: dict
+        self, cdip_nc: CDIPnc, request_timespan: cdip_utils.Timespan, result: dict
     ):
         # Try the next file if it is without xyz data
         z = cdip_nc.get_var("xyzZDisplacement")
@@ -347,7 +349,7 @@ class StnData(CDIPnc):
         end_stamp = cdip_nc.get_xyz_timestamp(len(z) - 1)
         if start_stamp is None:
             return result, self.start_stamp
-        file_timespan = cu.Timespan(start_stamp, end_stamp)
+        file_timespan = cdip_utils.Timespan(start_stamp, end_stamp)
         # Add data if request timespan overlaps data timespan
         if request_timespan.overlap(file_timespan):
             cdip_nc.start_stamp = self.start_stamp
@@ -382,7 +384,7 @@ class StnData(CDIPnc):
         """Merge xyz data from realtime and archive nc files."""
         if self.vrs and self.vrs[0] == "xyzData":
             self.vrs = ["xyzXDisplacement", "xyzYDisplacement", "xyzZDisplacement"]
-        request_timespan = cu.Timespan(self.start_stamp, self.end_stamp)
+        request_timespan = cdip_utils.Timespan(self.start_stamp, self.end_stamp)
         arch_file_used = False
         rt_file_used = False
         result = {}
@@ -567,7 +569,7 @@ class StnData(CDIPnc):
             if i_b == r_last_idx or r_stamps[i_b] == target_timestamp:
                 r_closest_idx = i_b
             elif i_b > 0:
-                r_closest_idx = cu.get_closest_index(
+                r_closest_idx = cdip_utils.get_closest_index(
                     i_b - 1, i_b, r_stamps, target_timestamp
                 )
 
@@ -594,33 +596,37 @@ class StnData(CDIPnc):
                 else:  # No realtime file
                     h_closest_idx = i_b
             else:  # Within middle of historic stamps
-                h_closest_idx = cu.get_closest_index(
+                h_closest_idx = cdip_utils.get_closest_index(
                     i_b - 1, i_b, h_stamps, target_timestamp
                 )
 
         # Now we have the closest index, find the intervals
 
         if r_closest_idx is not None:
-            r_interval = cu.get_interval(r_stamps, r_closest_idx, num_target_records)
+            r_interval = cdip_utils.get_interval(
+                r_stamps, r_closest_idx, num_target_records
+            )
             # If bound exceeded toward H and H exists, cacluate h_interval
             if r_interval[2] < 0 and h_ok:
                 if not h_last_idx:
                     h_stamps = self.historic.get_var(time_var)[:]
                     h_last_idx = len(h_stamps) - 1
-                h_interval = cu.get_interval(
+                h_interval = cdip_utils.get_interval(
                     h_stamps, h_last_idx, num_target_records + r_closest_idx + 1
                 )
-                return cu.combine_intervals(h_interval, r_interval)
+                return cdip_utils.combine_intervals(h_interval, r_interval)
             else:
                 return r_interval
         elif h_closest_idx is not None:
-            h_interval = cu.get_interval(h_stamps, h_closest_idx, num_target_records)
+            h_interval = cdip_utils.get_interval(
+                h_stamps, h_closest_idx, num_target_records
+            )
             # If bound exceeded toward R and R exists, cacluate r_interval
             if h_interval[2] > 0 and r_ok:
-                r_interval = cu.get_interval(
+                r_interval = cdip_utils.get_interval(
                     r_stamps, 0, num_target_records + h_closest_idx - h_last_idx - 1
                 )
-                return cu.combine_intervals(h_interval, r_interval)
+                return cdip_utils.combine_intervals(h_interval, r_interval)
             else:
                 return h_interval
 

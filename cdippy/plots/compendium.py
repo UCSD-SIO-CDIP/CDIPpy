@@ -1,5 +1,5 @@
-import cdippy.utils.utils as ut
-import cdippy.plots.utils as pu
+import cdippy.utils.utils as cdip_utils
+import cdippy.plots.utils as plot_utils
 from datetime import datetime
 import numpy as np
 import calendar
@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 
 def make_plot(
-    stns: str, start: datetime, end: datetime, params: str, x_inch: int
+    stns: str, start: datetime, end: datetime, params: str, x_inch: int = None
 ) -> tuple:
     """CDIP's classic compendium plot for multiple stations and parameters.
 
@@ -66,7 +66,7 @@ def make_plot(
         return fig, "Error: start is not set"
 
     if type(start) is str:
-        start = ut.cdip_datetime(start)
+        start = cdip_utils.cdip_datetime(start)
 
     month_plot = False
     if end is None:  # Month compendium plot
@@ -81,7 +81,7 @@ def make_plot(
         )
         month_plot = True
     elif type(end) is str:
-        end = ut.cdip_datetime(end)
+        end = cdip_utils.cdip_datetime(end)
 
     if params is None:
         params = "waveHs,waveTp,waveDp"
@@ -123,7 +123,7 @@ def make_plot(
 
         # Get the color for the station (circular list)
         if multiple_stns:
-            stn_color = pu.stn_colors[stn_idx]
+            stn_color = plot_utils.stn_colors[stn_idx]
         else:
             stn_color = "k"
         stn_idx += 1
@@ -155,13 +155,13 @@ def make_plot(
 
         # Prepare data to show gaps where there is no data
         index_name = "waveTime"
-        data = pu.prepare_gaps_dict(data, index_name)
+        data = plot_utils.prepare_gaps_dict(data, index_name)
 
         # Plot the processed data.
         if len(data) > 0:
-            wT = [ut.timestamp_to_datetime(x) for x in data["waveTime"]]
+            wT = [cdip_utils.timestamp_to_datetime(x) for x in data["waveTime"]]
             for idx in range(len(params)):
-                attr = pu.pm_data[params[idx]]
+                attr = plot_utils.pm_data[params[idx]]
                 ax = pm_axes[idx]
                 if multiple_stns:
                     plot_color = stn_color
@@ -201,12 +201,16 @@ def make_plot(
     plt.minorticks_on()
     for idx in range(len(params)):
         ax = pm_axes[idx]
-        attr = pu.pm_data[params[idx]]
+        attr = plot_utils.pm_data[params[idx]]
         # Grids
         ax.grid(
-            axis="x", which="major", color=pu.grid_color, linestyle="-", linewidth=2
+            axis="x",
+            which="major",
+            color=plot_utils.grid_color,
+            linestyle="-",
+            linewidth=2,
         )
-        ax.grid(axis="y", which="major", color=pu.grid_color, linestyle="-")
+        ax.grid(axis="y", which="major", color=plot_utils.grid_color, linestyle="-")
         # Ticks
         ax.tick_params(axis="x", which="minor", length=4, top="off")
         ax.tick_params(
@@ -227,12 +231,12 @@ def make_plot(
     # Note waveHs may not be in current stn data, hence check if in params.
     if "waveHs" in params:
         hs_ax = pm_axes[params.index("waveHs")]
-        low = pu.pm_data["waveHs"]["ylim"][0]
-        high = pu.pm_data["waveHs"]["ylim"][1]
+        low = plot_utils.pm_data["waveHs"]["ylim"][0]
+        high = plot_utils.pm_data["waveHs"]["ylim"][1]
         if hs_ylim_max < high:
             hs_ax.set_ylim(low, high)
         # Add second Hs axes
-        attr = pu.pm_data["waveHs"]
+        attr = plot_utils.pm_data["waveHs"]
         pHs2 = hs_ax.twinx()
         pHs2.set_ylabel(attr["ylabel_ft"], fontsize=label_font_size)
         pHs2.tick_params(axis="y", which="major", labelsize=label_font_size)
@@ -241,7 +245,7 @@ def make_plot(
 
     if "waveDp" in params:
         dp_ax = pm_axes[params.index("waveDp")]
-        attr = pu.pm_data["waveDp"]
+        attr = plot_utils.pm_data["waveDp"]
         pDp2 = dp_ax.twinx()
         pDp2.set_ylabel(attr["ylabel_compass"], fontsize=label_font_size)
         pDp2.tick_params(axis="y", which="major", labelsize=label_font_size)

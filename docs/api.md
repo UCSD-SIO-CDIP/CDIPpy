@@ -12,6 +12,9 @@
 ::: cdippy.ndbc
 
 
+::: cdippy.plotting
+
+
 ::: cdippy.spectra
 
 
