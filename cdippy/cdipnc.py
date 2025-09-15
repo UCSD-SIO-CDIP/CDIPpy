@@ -15,7 +15,6 @@ import cdippy.utils.urls as uu
 
 logger = logging.getLogger(__name__)
 
-
 class CDIPnc:
     """A base class used by the class StnData for retrieving data from
     CDIP netCDF (nc) files located either locally or remotely.
