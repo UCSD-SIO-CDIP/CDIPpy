@@ -1,5 +1,5 @@
-import cdippy.utils.urls as uu
-import cdippy.utils.utils as cu
+import cdippy.utils.urls as url_utils
+import cdippy.utils.utils as cdip_utils
 
 
 class NcHashes:
@@ -12,7 +12,7 @@ class NcHashes:
         self.hash_pkl = hash_file_location + "/HASH.pkl"
 
     def load_hash_table(self):
-        lines = uu.read_url(self.hashes_url).strip().split("\n")
+        lines = url_utils.read_url(self.hashes_url).strip().split("\n")
         for line in lines:
             if line[0:8] == "filename":
                 continue
@@ -44,7 +44,7 @@ class NcHashes:
         return changed
 
     def save_new_hashes(self):
-        cu.pkl_dump(self.new_hashes, self.hash_pkl)
+        cdip_utils.pkl_dump(self.new_hashes, self.hash_pkl)
 
     def get_old_hashes(self):
-        return cu.pkl_load(self.hash_pkl)
+        return cdip_utils.pkl_load(self.hash_pkl)

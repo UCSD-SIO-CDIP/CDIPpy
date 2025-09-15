@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 from bisect import bisect_left
 
 from cdippy.cdipnc import CDIPnc
-import cdippy.utils.utils as cu
+import cdippy.utils.utils as cdip_utils
 
 
 class MopData(CDIPnc):
@@ -238,11 +238,11 @@ class MopData(CDIPnc):
                     tzinfo=timezone.utc
                 )
             ts_I = self.get_target_timespan(
-                cu.datetime_to_timestamp(start), target_records, prefix + "Time"
+                cdip_utils.datetime_to_timestamp(start), target_records, prefix + "Time"
             )
             if ts_I[0] is not None:
-                start = cu.timestamp_to_datetime(ts_I[0])
-                end = cu.timestamp_to_datetime(ts_I[1])
+                start = cdip_utils.timestamp_to_datetime(ts_I[0])
+                end = cdip_utils.timestamp_to_datetime(ts_I[1])
             else:
                 return None
         elif start is None:  # Use default 3 days back
@@ -289,12 +289,14 @@ class MopData(CDIPnc):
         if i_b == last_idx or stamps[i_b] == target_timestamp:
             closest_idx = i_b
         elif i_b > 0:
-            closest_idx = cu.get_closest_index(i_b - 1, i_b, stamps, target_timestamp)
+            closest_idx = cdip_utils.get_closest_index(
+                i_b - 1, i_b, stamps, target_timestamp
+            )
 
         # Now we have the closest index, find the intervals
 
         if closest_idx is not None:
-            interval = cu.get_interval(stamps, closest_idx, num_target_records)
+            interval = cdip_utils.get_interval(stamps, closest_idx, num_target_records)
             return interval
 
         # If we get to here there's a problem

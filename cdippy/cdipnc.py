@@ -9,11 +9,12 @@ import numbers
 from bisect import bisect_left, bisect_right
 
 import cdippy.ndbc as ndbc
-import cdippy.utils.utils as cu
-import cdippy.utils.urls as uu
+import cdippy.utils.utils as cdip_utils
+import cdippy.utils.urls as url_utils
 
 
 logger = logging.getLogger(__name__)
+
 
 class CDIPnc:
     """A base class used by the class StnData for retrieving data from
@@ -170,9 +171,9 @@ class CDIPnc:
             )
         else:
             self.end_dt = end
-        self.start_stamp = cu.datetime_to_timestamp(self.start_dt)
+        self.start_stamp = cdip_utils.datetime_to_timestamp(self.start_dt)
 
-        self.end_stamp = cu.datetime_to_timestamp(self.end_dt)
+        self.end_stamp = cdip_utils.datetime_to_timestamp(self.end_dt)
 
     def get_request(self) -> dict:
         """Returns the data specified using set_request_info.
@@ -440,23 +441,23 @@ class CDIPnc:
         catalog_url = "/".join([self.THREDDS_url, "thredds", "catalog.xml"])
 
         result = {}
-        root = uu.load_et_root(catalog_url)
+        root = url_utils.load_et_root(catalog_url)
         catalogs = []
-        uu.rfindta(root, catalogs, "catalogRef", "href")
+        url_utils.rfindta(root, catalogs, "catalogRef", "href")
         for catalog in catalogs:
             # - Archive data sets
             url = self.THREDDS_url + catalog
-            cat = uu.load_et_root(url)
+            cat = url_utils.load_et_root(url)
             if catalog.find("archive") >= 0:
                 ar_urls = []
-                uu.rfindta(cat, ar_urls, "catalogRef", "href")
+                url_utils.rfindta(cat, ar_urls, "catalogRef", "href")
                 b_url = os.path.dirname(url)
                 # - Station datasets
                 ar_ds_urls = []
                 for u in ar_urls:
                     url = b_url + "/" + u
-                    ds = uu.load_et_root(url)
-                    uu.rfindta(ds, ar_ds_urls, "dataset", "urlPath")
+                    ds = url_utils.load_et_root(url)
+                    url_utils.rfindta(ds, ar_ds_urls, "dataset", "urlPath")
                 full_urls = []
                 for url in ar_ds_urls:
                     full_urls.append(
@@ -465,7 +466,7 @@ class CDIPnc:
                 result["archive"] = full_urls
             elif catalog.find("realtime") >= 0:
                 rt_ds_urls = []
-                uu.rfindta(cat, rt_ds_urls, "dataset", "urlPath")
+                url_utils.rfindta(cat, rt_ds_urls, "dataset", "urlPath")
                 full_urls = []
                 for url in rt_ds_urls:
                     full_urls.append(
@@ -996,8 +997,8 @@ class Archive(CDIPnc):
         end_idx = self.__get_idx_from_timestamp(self.end_stamp)
         z = self.get_var("xyzZDisplacement")
         # Find out if the request timespan overlaps the data
-        ts1 = cu.Timespan(start_idx, end_idx)
-        ts2 = cu.Timespan(0, len(z) - 1)
+        ts1 = cdip_utils.Timespan(start_idx, end_idx)
+        ts2 = cdip_utils.Timespan(0, len(z) - 1)
         if not ts1.overlap(ts2):
             return {}
         # Make sure the indices will work with the arrays

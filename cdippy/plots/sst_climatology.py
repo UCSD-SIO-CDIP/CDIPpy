@@ -5,7 +5,7 @@ import bisect
 
 
 # CDIP imports
-from cdippy.utils import utils as ut
+from cdippy.utils import utils as cdip_utils
 from cdippy.stndata import StnData
 
 import matplotlib as mpl
@@ -87,11 +87,11 @@ def make_plot(stn: str, x_inch: int = None, y_inch: int = None) -> tuple:
 
     for year in yearsort:
 
-        unixstart = ut.datetime_to_timestamp(datetime(year, 1, 1))
+        unixstart = cdip_utils.datetime_to_timestamp(datetime(year, 1, 1))
         ncstart = timefillunix[bisect.bisect_left(timefillunix, unixstart)]
         nearidx = np.where(timefillunix == ncstart)[0][0]
 
-        unixend = ut.datetime_to_timestamp(datetime(year, 12, 31, 23, 59, 59))
+        unixend = cdip_utils.datetime_to_timestamp(datetime(year, 12, 31, 23, 59, 59))
         ncend = timefillunix[(bisect.bisect_right(timefillunix, unixend)) - 1]
         futureidx = np.where(timefillunix == ncend)[0][0]
 
