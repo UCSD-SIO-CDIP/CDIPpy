@@ -45,5 +45,4 @@ def get_wmo_id(
         ids = cdip_utils.pkl_load(pkl_fl)
     if stn in ids:
         return ids[stn]
-    else:
-        return None
+    return None
