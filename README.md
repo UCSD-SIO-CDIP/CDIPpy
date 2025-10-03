@@ -2,4 +2,4 @@
 A python library for navigating and accessing CDIP products.
 
 ## Quick Start
-See the docs @ [https://cdipsw.github.io/CDIPpy/quickstart/](https://cdipsw.github.io/CDIPpy/quickstart/)
+See the docs @ [https://ucsd-sio-cdip.github.io/CDIPpy/quickstart/](https://ucsd-sio-cdip.github.io/CDIPpy/quickstart/)
