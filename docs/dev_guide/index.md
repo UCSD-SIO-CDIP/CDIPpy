@@ -15,13 +15,13 @@ You'll specifically want to look at configuring credentials with [https](https:/
 ## Install with dev tools
 It is recommended to us [`uv`](https://docs.astral.sh/uv/) to manage you development environment for this project, but other package managers will likely work as well. This documentation provides instructions for using `uv`.
 
-Navigate to the project root dirctory ('CDIPpy/') and run the following:
+Navigate to the project root directory ('CDIPpy/') and run the following:
 ``` bash
->>> pip install uv  # install uv pacakge manager
->>> uv sync  # create a virtual envionment at CDIPpy/.venv/, install the source code, its runtime dependencies and it's dev dependencies defined in pyproject.toml.
+>>> pip install uv  # install uv package manager
+>>> uv sync  # create a virtual environment at CDIPpy/.venv/, install the source code, its runtime dependencies and it's dev dependencies defined in pyproject.toml.
 >>> source .venv/bin/activate  # activate the environment
 ```
-To exclude the development dpendancies, you can run `uv sync --no-dev`.
+To exclude the development dependencies, you can run `uv sync --no-dev`.
 
 ### testing
 You can check that your dev installation was successful by running unit tests from the root directory: `python -m unittest discover`.  
@@ -30,6 +30,6 @@ This runs every test in the library; you should see all successful tests.
 Learn more about running specific tests or subsets from the [`unittest` docs](https://docs.python.org/3/library/unittest.html).
 
 ### linting
-This library uses `flake8` to check for adherance to the [PEP8](https://peps.python.org/pep-0008/) style guide. To check whether your code is compliant with the project style, run `flake8 .` from the project root.  You can fix problems manually, or use a tool like [`black`](https://black.readthedocs.io/en/stable/) to autolint: `black .`.
+This library uses `flake8` to check for adherence to the [PEP8](https://peps.python.org/pep-0008/) style guide. To check whether your code is compliant with the project style, run `flake8 .` from the project root.  You can fix problems manually, or use a tool like [`black`](https://black.readthedocs.io/en/stable/) to autolint: `black .`.
 
-This project also provides a [`pre-commit`](https://pre-commit.com/) hook to manage style for you autmatically on every `git commit`. To install it, run `pre-commit install` from the project root - this will use `black` and `flake` to autolint and check any changes you make for style before committing them to the repository.
+This project also provides a [`pre-commit`](https://pre-commit.com/) hook to manage style for you automatically on every `git commit`. To install it, run `pre-commit install` from the project root - this will use `black` and `flake` to autolint and check any changes you make for style before committing them to the repository.
