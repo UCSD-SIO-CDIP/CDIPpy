@@ -39,7 +39,7 @@ To view the coverage report:
 Contributions are welcome and should be merged via pull request on the `main` branch from a forked repository. Before a PR can be merged, it needs to pass the following checks:
 
 * all tests passed
-* coverage >= threshhold
+* coverage >= threshold
 * passes [`flake8`](https://flake8.pycqa.org/en/latest/) linter
 * there must be at least one reviewer approval
 * a CLA must be signed by the contributor, if this is their first commit
