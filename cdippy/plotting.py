@@ -17,11 +17,6 @@ def make_annual_hs_boxplot(stn: str, year: int) -> Figure:
     -------
     fig : Figure
         A matplotlib Figure object representing the annual wave height boxplot.
-
-    Example
-    -------
-    >>> fig = make_annual_hs_boxplot('100p1', 2023)
-    >>> fig.show()
     """
     return plots.annual_hs_boxplot.make_plot(stn, year)
 
@@ -30,7 +25,7 @@ def make_compendium_plot(
     stns: str, start: str, end: str, params: str, x_inch: int
 ) -> Figure:
     """
-    Generate CDIP's classic compendium plot for multiple stations and parameters over a time range.
+    Generate CDIP's compendium plot for multiple stations and parameters over a time range.
 
     Parameters
     ----------
@@ -49,11 +44,6 @@ def make_compendium_plot(
     -------
     fig : Figure
         A matplotlib Figure object representing the compendium plot.
-
-    Example
-    -------
-    >>> fig = make_compendium_plot('100p1,201p1', '202301', '202312', 'waveHs,waveTp', 10)
-    >>> fig.show()
     """
     return plots.compendium.make_plot(stns, start, end, params, x_inch)
 
@@ -77,10 +67,5 @@ def make_sst_climatology_plot(
     -------
     fig : Figure
         A matplotlib Figure object representing the SST climatology plot.
-
-    Example
-    -------
-    >>> fig = make_sst_climatology_plot('100p1', x_inch=8, y_inch=6)
-    >>> fig.show()
     """
     return plots.sst_climatology.make_plot(stn, x_inch, y_inch)
