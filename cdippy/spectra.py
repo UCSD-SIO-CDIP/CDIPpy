@@ -13,6 +13,12 @@ MODULE = importlib.import_module("cdippy.spectra")
 
 
 class Spectra(object):
+    """Container for multiple `Spectrum` subclass objects.
+
+    The `Spectra` class manages an array of `Spectrum` subclass instances
+    (e.g., `Spectrum_64band`, `Spectrum_100band`) and provides methods
+    to create, query, and redistribute spectral data.
+    """
     def __init__(self):
         """initializing Spectra. Meant for using methods to create array
             of Spectrum subClass objects
@@ -22,33 +28,49 @@ class Spectra(object):
         self.specArr = []
 
     def get_spectraNum(self):
-        """return the number of objects (spectrum) in the specArr"""
+        """Return the number of spectra in the collection.
+
+        Returns:
+            int: Number of `Spectrum` objects in `specArr`.
+        """
         return len(self.specArr)
 
     def __str__(self):
-        """Spectra is an array of Spectrum(s)"""
+        """String representation of the `Spectra` instance."""
         return "Spectra is an array of {0} Spectrum(s)".format(self.get_spectraNum())
 
     def get_spectraType(self):
-        """returns the type of Class of the first object in specArr,
-        all should be the same i.e. Spectrum_64band"""
+        """Return the subclass type of spectra contained in `specArr`.
+
+        Returns:
+            type or None: Class type of spectra (e.g., `Spectrum_64band`) or
+            `None` if `specArr` is empty.
+        """
         if self.get_spectraNum() > 0:
             return type(self.specArr[0])
         else:
             return None
 
     def get_bandSize(self):
-        """returns the size (number of freq/bands) of the spectrum in spectra"""
+        """Return the number of frequency bands in the spectra.
+
+        Returns:
+            int: Number of frequency bands, or 0 if no spectra are loaded.
+        """
         if self.get_spectraNum() > 0:
             return len(self.specArr[0].freq)
         else:
             return 0
 
     def whichSpecClass(self, length):
-        """
-        Return the type subClass of Spectrum is appropriate according length passed
-        i.e. Spectrum_64band
-        :var int lenght: length/count of the number of frequencies
+        """Determine the appropriate `Spectrum` subclass based on band length.
+
+        Args:
+            length (int): Number of frequency bands.
+
+        Returns:
+            type or None: Matching subclass (e.g., `Spectrum_64band`) or `None`
+            if no subclass matches the provided length.
         """
         specObjs = Spectrum.__subclasses__()
         for sObj in specObjs:
@@ -59,10 +81,12 @@ class Spectra(object):
 
     # def get_spectrumArr_from_StnData(self, stn, start, end):
     def set_spectrumArr_fromQuery(self, dataDict):
-        """
-        specArr is empty. Create Spectrum objects and put in specArr
+        """Create and populate `Spectrum` objects from query results.
 
-        :var dataDict: dictionary (output from cdippy.stndata query)
+        Args:
+            dataDict (dict): Dictionary of spectral data (e.g., output from
+                `cdippy.stndata` query) containing keys like
+                `'waveEnergyDensity'` and `'waveTime'`.
         """
         bandNum = len(dataDict["waveEnergyDensity"][0])
         specCls = self.whichSpecClass(bandNum)
@@ -74,7 +98,12 @@ class Spectra(object):
             self.specArr.append(spec)
 
     def specArr_ToDict(self):
-        """Output the specArr as a dictionary with keys like waveA1Value, waveEnergyDensity etc."""
+        """Convert all spectra in `specArr` into a dictionary of masked arrays.
+
+        Returns:
+            dict: Dictionary containing keys such as `'waveEnergyDensity'`,
+            `'waveMeanDirection'`, `'waveA1Value'`, etc.
+        """
         newDict = {}
         if len(self.specArr) == 0:
             return newDict
@@ -118,10 +147,11 @@ class Spectra(object):
         return newDict
 
     def redist_specArr(self, objName):
-        """
-        Will redistribute spectrum if necessary (if different type)
+        """Redistribute all spectra to a different subclass if necessary.
 
-        :var int objName: name of the subClass to redistribute to. .i.e. ``Spectrum_9band``
+        Args:
+            objName (str): Name of the subclass to redistribute to
+                (e.g., `'Spectrum_9band'`).
         """
         if self.get_spectraType() != objName:
             for i, sp in enumerate(self.specArr):
@@ -129,6 +159,8 @@ class Spectra(object):
 
 
 class Spectrum(object):
+    """Base class representing a single wave energy spectrum."""
+    
     def __init__(self):
         pass
 
@@ -137,10 +169,11 @@ class Spectrum(object):
         # return "Station %s: \n\tstart: %s \n\tend : %s" % (self.stn, self.start.isoformat(), self.end.isoformat())
 
     def set_specAtts(self, query, i):
-        """Set spectra attributes from cdippy.stndata query
+        """Set spectra attributes from query data.
 
-        :var mArr query: multi-dimentional array returned from cdippy.stndata
-        :var int i: index
+        Args:
+            query (dict): Dictionary containing spectrum data arrays.
+            i (int): Index to extract from each array.
         """
         self.wTime = query["waveTime"][i]
         self.dMean = query["waveMeanDirection"][i]
@@ -154,18 +187,22 @@ class Spectrum(object):
         )
 
     def set_FreqBands(self, num, sz):
-        """Makes array of frequencies
-        :var int num: frequency or bandwith?
-        :var int sz: size, number of bands
-        """
+        """Generate frequency and bandwidth arrays.
 
+        Args:
+            num (float): Frequency or bandwidth multiplier.
+            sz (int): Number of frequency bands.
+        """
         self.freq = np.ma.array(list(map(lambda x: x * num, range(1, sz + 1))))
         self.bandwidth = np.ma.array(([num] * sz), dtype=np.float32)
         # return list(map(lambda x: x*num, range(1, sz+1)))
 
     def freq_cutoffs(self):
-        """returns array of tuples of all the (low,high) frequencies;
-        a.k.a.bots/tops"""
+        """Compute frequency cutoffs for all bands.
+
+        Returns:
+            list[tuple[float, float]]: List of `(low, high)` a.k.a.bots/tops cutoff tuples.
+        """
         arr = []
         for i, f in enumerate(self.freq):
             b = self.bandwidth[i]
@@ -174,30 +211,52 @@ class Spectrum(object):
         return arr
 
     def recip(self, f):
-        """returns INTEGER of reciprocal of number.
-        Specifically for converting frequency (float) to period(integer)"""
+        """Return the integer reciprocal of frequency.
+
+        Args:
+            f (float): Frequency.
+
+        Returns:
+            int: Rounded reciprocal (period).
+        """
         return round(1 / f)
 
     def peri_cutoffs(self):
-        """returns array of tuples of all the (low,high) periods"""
+        """Compute period cutoffs from frequency cutoffs.
+
+        Returns:
+            list[tuple[int, int]]: List of `(low, high)` period tuples.
+        """
         return list(map(lambda x: tuple(map(self.recip, x)), self.freq_cutoffs()))
 
     # def get_center_periods(self):
     #     return list(map(lambda x: "%.1f" % (1/x), self.freq))
 
     def ma_to_list(self, marray):
-        """
-        :var str marray: string name of attribute that contains a masked array
+        """Convert a masked array attribute to a list.
+
+        Args:
+            marray (str): Name of attribute containing a masked array.
+
+        Returns:
+            list: Data from masked array as a Python list.
         """
         return list(np.ma.getdata(getattr(self, marray)))
 
     def get_Energy(self):
-        """units:meters**2 per bandwidth.
-        sum(get_energy) is Total Energy"""
+        """Compute energy per bandwidth.
+
+        Returns:
+            numpy.ndarray: Energy values (m² per bandwidth).
+        """
         return self.ener_dens * self.bandwidth
 
     def get_SigWaveHt(self):
-        """units: meters"""
+        """Compute significant wave height for each band.
+
+        Returns:
+            map: Iterator of significant wave heights (meters).
+        """
         # return list(map(lambda x: self.calc_Hs(x), self.get_Energy()))
         return map(lambda x: self.calc_Hs(x), self.get_Energy())
 
@@ -221,11 +280,13 @@ class Spectrum(object):
         return self.calc_Hs(np.sum(self.get_Energy()))
 
     def redistribute_sp(self, specInstClass):
-        """
-        translation of Corey's redistribute_sp code:
-        c  Subroutine that redistributes a spectrum into a new spectral layout.
+        """Redistribute spectrum to a different spectral layout inspired by Corey's redistribute_sp code.
 
-        :var specInstClass: the class to redistribute to can be instance or name of Class
+        Args:
+            specInstClass (str): Name of target subclass (e.g., `'Spectrum_9band'`).
+
+        Returns:
+            Spectrum: Redistributed spectrum instance.
         """
         # c--   Initialize the new spectral dist (redist_sp)
         try:
@@ -715,9 +776,11 @@ class Spectrum_128band(Spectrum):
 class Spectrum_custom(Spectrum):
     def __init__(self, fr=[], bw=[]):
         super().__init__()
-        """
-        :var arr fr: array of frequency(ies)
-        :var arr bw: array of bandwidth(s)
+        """Custom frequency and bandwidth spectral representation.
+
+        Args:
+            fr (list[float], optional): List of frequencies.
+            bw (list[float], optional): List of bandwidths.
         """
         self.freq = fr
         self.bandwidth = bw
