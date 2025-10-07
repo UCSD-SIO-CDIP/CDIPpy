@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -31,7 +32,11 @@
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
           <a href=".." class="icon icon-home"> CDIPpy Docs
-        </a>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
@@ -41,6 +46,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../quickstart/">Quick start</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../api/">API reference</a>
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Users guide</span></p>
@@ -112,19 +121,19 @@ You'll specifically want to look at configuring credentials with <a href="https:
 <p><a href="https://dangitgit.com/">Dangit, Git!?!</a> is another great resource for fixing git problems.</p>
 <h2 id="install-with-dev-tools">Install with dev tools</h2>
 <p>It is recommended to us <a href="https://docs.astral.sh/uv/"><code>uv</code></a> to manage you development environment for this project, but other package managers will likely work as well. This documentation provides instructions for using <code>uv</code>.</p>
-<p>Navigate to the project root dirctory ('CDIPpy/') and run the following:</p>
-<pre><code class="language-bash">&gt;&gt;&gt; pip install uv  # install uv pacakge manager
-&gt;&gt;&gt; uv sync  # create a virtual envionment at CDIPpy/.venv/, install the source code, its runtime dependencies and it's dev dependencies defined in pyproject.toml.
+<p>Navigate to the project root directory ('CDIPpy/') and run the following:</p>
+<pre><code class="language-bash">&gt;&gt;&gt; pip install uv  # install uv package manager
+&gt;&gt;&gt; uv sync  # create a virtual environment at CDIPpy/.venv/, install the source code, its runtime dependencies and it's dev dependencies defined in pyproject.toml.
 &gt;&gt;&gt; source .venv/bin/activate  # activate the environment
 </code></pre>
-<p>To exclude the development dpendancies, you can run <code>uv sync --no-dev</code>.</p>
+<p>To exclude the development dependencies, you can run <code>uv sync --no-dev</code>.</p>
 <h3 id="testing">testing</h3>
 <p>You can check that your dev installation was successful by running unit tests from the root directory: <code>python -m unittest discover</code>.<br />
 This runs every test in the library; you should see all successful tests.</p>
 <p>Learn more about running specific tests or subsets from the <a href="https://docs.python.org/3/library/unittest.html"><code>unittest</code> docs</a>.</p>
 <h3 id="linting">linting</h3>
-<p>This library uses <code>flake8</code> to check for adherance to the <a href="https://peps.python.org/pep-0008/">PEP8</a> style guide. To check whether your code is compliant with the project style, run <code>flake8 .</code> from the project root.  You can fix problems manually, or use a tool like <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> to autolint: <code>black .</code>.</p>
-<p>This project also provides a <a href="https://pre-commit.com/"><code>pre-commit</code></a> hook to manage style for you autmatically on every <code>git commit</code>. To install it, run <code>pre-commit install</code> from the project root - this will use <code>black</code> and <code>flake</code> to autolint and check any changes you make for style before committing them to the repository.</p>
+<p>This library uses <code>flake8</code> to check for adherence to the <a href="https://peps.python.org/pep-0008/">PEP8</a> style guide. To check whether your code is compliant with the project style, run <code>flake8 .</code> from the project root.  You can fix problems manually, or use a tool like <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> to autolint: <code>black .</code>.</p>
+<p>This project also provides a <a href="https://pre-commit.com/"><code>pre-commit</code></a> hook to manage style for you automatically on every <code>git commit</code>. To install it, run <code>pre-commit install</code> from the project root - this will use <code>black</code> and <code>flake</code> to autolint and check any changes you make for style before committing them to the repository.</p>
               
             </div>
           </div><footer>
@@ -164,6 +173,7 @@ This runs every test in the library; you should see all successful tests.</p>
     <script>var base_url = "..";</script>
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
     <script>
         jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);

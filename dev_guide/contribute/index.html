@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../assets/_mkdocstrings.css" rel="stylesheet" />
     
       <script>
         // Current page data
@@ -31,7 +32,11 @@
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
           <a href="../.." class="icon icon-home"> CDIPpy Docs
-        </a>
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
@@ -41,6 +46,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../quickstart/">Quick start</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../api/">API reference</a>
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Users guide</span></p>
@@ -120,8 +129,8 @@
 <h2 id="setting-up-your-git-workflow">Setting up your git workflow</h2>
 <p>This project uses a fork-and-pull-request workflow. You will need to make your <a href="https://github.com/cdipsw/CDIPpy/fork">fork</a> of the repository to work in, and submit changes to CDIPpy via pull request. To set up your workflow, follow these instructions:</p>
 <ol>
-<li>Fork the respository at <a href="https://github.com/cdipsw/CDIPpy/fork">https://github.com/cdipsw/CDIPpy/fork</a></li>
-<li>Clone the repository from  your fork <code>git clone https://github.com/{your_github_username}/CDIPpy.git</code> - this will add your own fork as your <code>origin</code> remote repo. <em>Note: If you already have the main fork cloned, skip to the next step and follow instuctions to add your fork as another remote.</em></li>
+<li>Fork the repository at <a href="https://github.com/cdipsw/CDIPpy/fork">https://github.com/cdipsw/CDIPpy/fork</a></li>
+<li>Clone the repository from  your fork <code>git clone https://github.com/{your_github_username}/CDIPpy.git</code> - this will add your own fork as your <code>origin</code> remote repo. <em>Note: If you already have the main fork cloned, skip to the next step and follow instructions to add your fork as another remote.</em></li>
 <li>Add the main fork as another remote (or your fork, if you cloned from the main fork). This will allow you to pull latest code from the main fork, but push your own development to your own fork:  </li>
 </ol>
 <pre><code class="language-bash">git add remote cdip https://github.com/cdipsw/CDIPpy.git
@@ -135,16 +144,16 @@ git remote -v
 git pull
 git checkout -b example-branch
 </code></pre>
-<p>This will create a new branch called <code>example-branch</code> based on the lastest commit to <code>main</code>. Now you can start making your changes.  </p>
+<p>This will create a new branch called <code>example-branch</code> based on the latest commit to <code>main</code>. Now you can start making your changes.  </p>
 <p>Any changes you plan to contribute should be sure to follow the project's style guide, testing structure, and be up-to-date with documentation.</p>
 <h3 id="linting">linting</h3>
-<p>First you'll need to make sure your code style matches the rest of <code>cdippy</code> by using the <code>flake8</code> linter to check for adherance to the <a href="https://peps.python.org/pep-0008/">PEP8</a> style guide:  </p>
+<p>First you'll need to make sure your code style matches the rest of <code>cdippy</code> by using the <code>flake8</code> linter to check for adherence to the <a href="https://peps.python.org/pep-0008/">PEP8</a> style guide:  </p>
 <pre><code class="language-bash">flake8 .
 </code></pre>
-<p>If this commnad is successful, your style is up to date! Otherwise, the output will indicate where in the project the style is not compliant. You can manually fix these style deviations, or use  a tool like <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> to autolint: </p>
+<p>If this command is successful, your style is up to date! Otherwise, the output will indicate where in the project the style is not compliant. You can manually fix these style deviations, or use  a tool like <a href="https://black.readthedocs.io/en/stable/"><code>black</code></a> to autolint: </p>
 <pre><code class="language-bash">black .  
 </code></pre>
-<p>This project also provides a <a href="https://pre-commit.com/"><code>pre-commit</code></a> hook to manage style for you autmatically on every <code>git commit</code>. From  the porject root:</p>
+<p>This project also provides a <a href="https://pre-commit.com/"><code>pre-commit</code></a> hook to manage style for you automatically on every <code>git commit</code>. From  the project root:</p>
 <pre><code class="language-bash">pre-commit install
 </code></pre>
 <p>When you run <code>git commit</code> from your repo with the pre-commit hook installed, <code>black</code> will attempt to autolint the code and <code>flake8</code> will verify the results; the commit will fail if style errors are found, and you will need to manually fix them and try to commit again.   </p>
@@ -264,6 +273,7 @@ Step 3: meet merge criteria - the next step is to see if the PR build passes. Ch
     <script>var base_url = "../..";</script>
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
     <script>
         jQuery(function () {
             SphinxRtdTheme.Navigation.enable(true);
