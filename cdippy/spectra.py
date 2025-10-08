@@ -160,7 +160,6 @@ class Spectra(object):
 
 class Spectrum(object):
     """Base class representing a single wave energy spectrum."""
-    
     def __init__(self):
         pass
 
