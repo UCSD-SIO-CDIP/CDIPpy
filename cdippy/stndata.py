@@ -101,19 +101,13 @@ class StnData(CDIPnc):
     def __init__(
         self, stn: str, data_dir: str = None, org: str = None, deploy_num: int = None
     ):
-        """
-        PARAMETERS
-        ----------
-        stn : str
-           Can be in 2, 3 or 5 char format e.g. 28, 028, 028p2
-        data_dir : str [optional]
-            Either a full path to a directory containing a local directory hierarchy
-            of nc files. E.g. '/project/WNC' or a url to a THREDDS server.
-        org: str
-            (Organization) Values are: cdip|ww3|external
-        deploy_num : int [optional]
-            Supply this to access specific station deployment data.
-            Must be >= 1.
+        """Initializes StnData for a given CDIP station.
+
+        Args:
+            stn (str): Station identifier in 2, 3, or 5 character format (e.g. "28", "028", "028p2").
+            data_dir (str, optional): Path to directory containing netCDF files or a THREDDS URL.
+            org (str): Data organization, one of {"cdip", "ww3", "external"}.
+            deploy_num (int, optional): Deployment number (>=1) to access specific station deployment data.
         """
         self.nc = None
         self.stn = stn
@@ -151,7 +145,11 @@ class StnData(CDIPnc):
             return None
 
     def get_stn_meta(self) -> dict:
-        """Returns a dict of station meta data."""
+        """Returns a dictionary of station metadata.
+
+        Returns:
+            dict: A dictionary containing metadata variables and global attributes.
+        """
         result = {}
         if self.meta is None:
             return result
@@ -170,7 +168,18 @@ class StnData(CDIPnc):
         apply_mask=True,
         target_records=0,
     ) -> dict:
-        """Calls get_series to return wave parameters."""
+        """Returns wave parameter data using get_series.
+
+        Args:
+            start (datetime, optional): Start time of data request (UTC).
+            end (datetime, optional): End time of data request (UTC).
+            pub_set (str, optional): Data quality filter. One of {"public", "nonpub", "all"}. Defaults to "public".
+            apply_mask (bool, optional): Whether to apply mask filtering. Defaults to True.
+            target_records (int, optional): Number of records to return if end is not specified.
+
+        Returns:
+            dict: Dictionary of wave parameter data arrays.
+        """
         return self.get_series(
             start, end, self.parameter_vars, pub_set, apply_mask, target_records
         )
@@ -178,7 +187,16 @@ class StnData(CDIPnc):
     def get_xyz(
         self, start: datetime = None, end: datetime = None, pub_set: str = "public"
     ) -> dict:
-        """Calls get_series to return displacement data."""
+        """Returns displacement (XYZ) data using get_series.
+
+        Args:
+            start (datetime, optional): Start time of data request (UTC).
+            end (datetime, optional): End time of data request (UTC).
+            pub_set (str, optional): Data quality filter. Defaults to "public".
+
+        Returns:
+            dict: Dictionary of XYZ displacement data.
+        """
         return self.get_series(start, end, self.xyz_vars, pub_set)
 
     def get_spectra(
@@ -190,7 +208,19 @@ class StnData(CDIPnc):
         target_records: int = 0,
         force_64bands: bool = False,
     ) -> dict:
-        """Calls get_series to return spectral data."""
+        """Returns spectral data using get_series.
+
+        Args:
+            start (datetime, optional): Start time of data request (UTC).
+            end (datetime, optional): End time of data request (UTC).
+            pub_set (str, optional): Data quality filter. Defaults to "public".
+            apply_mask (bool, optional): Whether to apply mask filtering. Defaults to True.
+            target_records (int, optional): Number of records to return if end is not specified.
+            force_64bands (bool, optional): If True, converts all spectra to 64-band format.
+
+        Returns:
+            dict: Dictionary of spectral data arrays.
+        """
         return self.get_series(
             start,
             end,
@@ -211,36 +241,21 @@ class StnData(CDIPnc):
         target_records: int = 0,
         force_64bands: bool = False,
     ) -> dict:
-        """
-        Returns a dict of data between start and end dates with specified quality.
+        """Returns data for a station between specified start and end dates.
 
-        PARAMETERS
-        ----------
-        start : str or datetime [optional] : default Jan 1, 1975
-            Start time of data request (UTC). If provided as a string must
-            be in the format Y-m-d H:M:S where Y is 4 chars and all others
-            are 2 chars. Ex. '2020-03-30 19:32:56'.
-        end : str or datetime [optional] : default now
-            End time of data request (UTC). If not supplied defaults to now.
-        vrs : list [optional] : default ['waveHs']
-            A list of the names of variables to retrieve. They all must start
-            with the same prefix, e.g. ['waveHs', 'waveTp', 'waveDp']
-        pub_set: str [optional] values = public|nonpub|all
-            Filters data based on data quality flags.
-        apply_mask: bool [optional] default True
-            Removes values from the masked array that have a mask value of True.
-            Ex. If nonpub data is requested and apply_mask is False, the returned
-            array will contain both public and nonpublic data (although public
-            data records will have the mask value set to True). If apply_mask
-            is set to True, only nonpub records will be returned.
-        target_records: int [optional]
-            If start is specified and end is None, this will specify the number
-            of additional records to return closest to start.
-        force_64bands: bool [optional]
-            For the case in which all spectra returned are mk4 100 band format,
-            force the conversion to 64bands. Mixed formats are always returned in mk3
-            64 band format.
+        Args:
+            start (datetime or str, optional): Start time of data request (UTC).
+            end (datetime or str, optional): End time of data request (UTC).
+            vrs (list, optional): List of variable names to retrieve.
+            pub_set (str, optional): Data quality filter. One of {"public", "nonpub", "all"}.
+            apply_mask (bool, optional): Whether to apply mask filtering.
+            target_records (int, optional): Number of records to return when end is None.
+            force_64bands (bool, optional): Whether to force conversion of spectra to 64 bands.
+
+        Returns:
+            dict: Dictionary of requested variable arrays.
         """
+        
         if vrs is None:
             vrs = self.parameter_vars
         prefix = self.get_var_prefix(vrs[0])
@@ -363,7 +378,14 @@ class StnData(CDIPnc):
         return result, start_stamp
 
     def remove_duplicates(self, data_dict: dict) -> dict:
-        """Duplicate records may exist after merge_ routines. This removes them."""
+        """Removes duplicate records after merging multiple datasets.
+
+        Args:
+            data_dict (dict): Dictionary of merged data arrays.
+
+        Returns:
+            dict: Dictionary with duplicate records removed.
+        """
         result = {}
         keys = list(data_dict.keys())
         if len(keys) > 0:
@@ -505,7 +527,14 @@ class StnData(CDIPnc):
         return result
 
     def get_nc_files(self, types: list = nc_file_types) -> dict:
-        """Returns dict of netCDF4 objects of a station's netcdf files"""
+        """Returns all available netCDF files for a station.
+
+        Args:
+            types (list, optional): List of file types to include. Defaults to all nc_file_types.
+
+        Returns:
+            dict: Dictionary mapping filenames to netCDF objects.
+        """
         result = {}
         for ftype in types:
             if ftype == "historic":
@@ -531,24 +560,15 @@ class StnData(CDIPnc):
     def get_target_timespan(
         self, target_timestamp: int, num_target_records: int, time_var: str
     ) -> tuple:
-        """Returns a timespan containing the n closest records to the target_timestamp.
+        """Finds a timespan containing the n records closest to a target timestamp.
 
-        PARAMETERS
-        ----------
-        target_timestamp : int
-            A unix timestamp which is the target time about which the closest
-            n records will be returned.
-        n : int
-            The number of records to return that are closest to the target
-            timestamp.
-        time_var : str
-            The name of the time dimension variable to use. E.g. waveTime.
+        Args:
+            target_timestamp (int): Target UNIX timestamp.
+            num_target_records (int): Number of records to return.
+            time_var (str): Name of time variable (e.g. "waveTime").
 
-        RETURNS
-        -------
-        A 2-tuple of timestamps corresponding to i and i+n (where n may
-        be negative) which will be the timestamps for the n records
-        closest to the target_timestamp.
+        Returns:
+            tuple: (start_timestamp, end_timestamp, direction), or (None, None, None) if not found.
         """
         r_ok = False
         if self.realtime.nc is not None:
