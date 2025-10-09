@@ -110,7 +110,6 @@ class CDIPnc:
                 or a URL to a THREDDS server. Examples: '/project/WNC' or THREDDS URL.
             deployment (int, optional): Station deployment number (>=1) to access specific data.
         """
-        
         self.nc = None
         self.data_dir = data_dir
         self.deployment = deployment
@@ -472,7 +471,7 @@ class CDIPnc:
 
         Returns:
             netCDF4.Variable or None: Variable object or None.
-        """        
+        """ 
         if self.nc is None or var_name not in self.nc.variables:
             return None
         return self.nc.variables[var_name]
@@ -544,41 +543,38 @@ class CDIPnc:
         which can be an actual path to the nc file or a URL to a THREDDS DODS service.
 
         Args:
-            stn (str): Station identifier. Can be in 3-char (e.g., "028") or 
-                5-char (e.g., "028p2") format for org="cdip".
+            stn (str): Station identifier. Can be in 3-char (e.g., "028") or 5-char (e.g., "028p2") format for org="cdip".
             org (str): Organization. Values are "cdip", "ww3", or "external".
-            dataset_name (str): Dataset name. Values include:
-                "realtime", "historic", "archive", "realtimexy", "archivexy",
-                "predeploy", "moored", "offsite", "recovered".
-            deployment (int, optional): Supply this to access specific station deployment data. 
-                Must be >= 1.
+            dataset_name (str): Dataset name. Values include: "realtime", "historic", "archive", "realtimexy", "archivexy",
+            "predeploy", "moored", "offsite", "recovered".
+            deployment (int, optional): Supply this to access specific station deployment data. Must be >= 1.
 
         Notes:
             Paths:
-                - <top_dir>/EXTERNAL/WW3/<filename>  
+                - <top_dir>/EXTERNAL/WW3/<filename>
                     [filename = <stn>_<org_dir>_<dataset_name>.nc] (CDIP station like 192w3)
-                - <top_dir>/REALTIME/<filename>  
+                - <top_dir>/REALTIME/<filename>
                     [filename = <stn><p1>_rt.nc]
-                - <top_dir>/REALTIME/<filename>  
+                - <top_dir>/REALTIME/<filename>
                     [filename = <stn><p1>_xy.nc]
-                - <top_dir>/ARCHIVE/<stn>/<filename>  
+                - <top_dir>/ARCHIVE/<stn>/<filename>
                     [filename = <stn3><p1>_<deployment>.nc]
-                - <top_dir>/PREDEPLOY/<stn>/<filename>  
+                - <top_dir>/PREDEPLOY/<stn>/<filename>
                     [filename = <stn3><pX>_<deployment>_rt.nc]
-                - <top_dir>/PREDEPLOY/<stn>/<filename>  
+                - <top_dir>/PREDEPLOY/<stn>/<filename>
                     [filename = <stn3><pX>_<deployment>_xy.nc]
 
-            Active deployment directories are PREDEPLOY (p0), MOORED (p1), OFFSITE (p2), and RECOVERED (p3). 
+            Active deployment directories are PREDEPLOY (p0), MOORED (p1), OFFSITE (p2), and RECOVERED (p3).
             Here, pX = p0|p1|p2|p3; deployment = dXX (e.g., d01).
 
         URLs:
-            - http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<org_dir>/<filename>  
+            - http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<org_dir>/<filename>
             [org1 = external|cdip, org_dir = WW3|OWI etc]
             - http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<dataset_name>/<filename>
 
         Note:
-            Since adding `dataset_name`, we no longer need the 5-char station ID 
-            for org="cdip" datasets. The `p_val` will be "p1" for every dataset except 
+            Since adding `dataset_name`, we no longer need the 5-char station ID
+            for org="cdip" datasets. The `p_val` will be "p1" for every dataset except
             active datasets in buoy states: predeploy (p0), offsite (p2), and recovered (p3).
         """
         ext = ".nc"
@@ -668,7 +664,6 @@ class Latest(CDIPnc):
         Args:
             data_dir (str, optional): Local path or THREDDS URL.
         """
-
         CDIPnc.__init__(self, data_dir)
         self.labels = []  # - Holds stn labels, e.g. '100p1' for this instance
         # Set latest timespan (Latest_3day goes up to 30 minutes beyond now)
@@ -705,7 +700,7 @@ class Latest(CDIPnc):
 
         Returns:
             list: Site labels.
-        """        
+        """
         if self.nc is None:
             return None
         for label_arr in self.nc.variables["metaSiteLabel"]:

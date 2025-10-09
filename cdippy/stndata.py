@@ -255,7 +255,6 @@ class StnData(CDIPnc):
         Returns:
             dict: Dictionary of requested variable arrays.
         """
-        
         if vrs is None:
             vrs = self.parameter_vars
         prefix = self.get_var_prefix(vrs[0])
