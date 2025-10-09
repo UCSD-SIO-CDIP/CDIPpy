@@ -471,7 +471,7 @@ class CDIPnc:
 
         Returns:
             netCDF4.Variable or None: Variable object or None.
-        """ 
+        """
         if self.nc is None or var_name not in self.nc.variables:
             return None
         return self.nc.variables[var_name]
@@ -538,8 +538,8 @@ class CDIPnc:
         self, stn: str, org: str, dataset_name: str, deployment: int = None
     ) -> None:
         """
-        Sets `self.stn`, `self.org`, `self.filename`, `self.url` and loads `self.nc`. 
-        The key to understanding all of this is that we are ultimately setting `_url_`, 
+        Sets `self.stn`, `self.org`, `self.filename`, `self.url` and loads `self.nc`.
+        The key to understanding all of this is that we are ultimately setting `_url_`,
         which can be an actual path to the nc file or a URL to a THREDDS DODS service.
 
         Args:
@@ -651,6 +651,7 @@ class CDIPnc:
         self.stn = stn
         self.org = org
         self.nc = self.get_nc()
+
 
 class Latest(CDIPnc):
     """Access the latest 3-day CDIP dataset with retrieval methods for all metadata and variables."""
