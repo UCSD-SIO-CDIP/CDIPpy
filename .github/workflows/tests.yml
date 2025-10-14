@@ -29,5 +29,6 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          coverage run -m unittest discover
+          # Skip coverage for netCDF4 C-extension to avoid false failures
+          coverage run --omit='*/_netCDF4*' -m unittest discover
           coverage report --fail-under=55
