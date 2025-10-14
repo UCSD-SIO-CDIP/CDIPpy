@@ -103,16 +103,13 @@ class CDIPnc:
     # 5. Apply the mask if self.apply_mask set True.
 
     def __init__(self, data_dir: str = None, deployment: int = None):
-        """PARAMETERS
-        ----------
-        data_dir : str [optional]
-            Either a full path to a directory containing a local directory hierarchy
-            of nc files. E.g. '/project/WNC' or a url to a THREDDS server.
-        deployment : int [optional]
-            Supply this to access specific station deployment data.
-            Must be >= 1.
-        """
+        """Initialize a CDIPnc instance.
 
+        Args:
+            data_dir (str, optional): Full path to a directory containing local nc files
+                or a URL to a THREDDS server. Examples: '/project/WNC' or THREDDS URL.
+            deployment (int, optional): Station deployment number (>=1) to access specific data.
+        """
         self.nc = None
         self.data_dir = data_dir
         self.deployment = deployment
@@ -125,27 +122,15 @@ class CDIPnc:
         pub_set: str = "public",
         apply_mask: bool = True,
     ) -> None:
-        """Initializes data request information for get_request.
+        """Initialize data request parameters for get_request.
 
-        PARAMETERS
-        ----------
-        start : str or datetime [optional] : default Jan 1, 1975
-            Start time of data request (UTC). If provided as a string must
-            be in the format Y-m-d H:M:S where Y is 4 chars and all others
-            are 2 chars. Ex. '2020-03-30 19:32:56'.
-        end : str or datetime [optional] : default now
-            End time of data request (UTC). If not supplied defaults to now.
-        vrs : list [optional] : default ['waveHs']
-            A list of the names of variables to retrieve. They all must start
-            with the same prefix, e.g. ['waveHs', 'waveTp', 'waveDp']
-        pub_set: str [optional] values = public|nonpub|all
-            Filters data based on data quality flags.
-        apply_mask: bool [optional] default True
-            Removes values from the masked array that have a mask value of True.
-            Ex. If nonpub data is requested and apply_mask is False, the returned
-            array will contain both public and nonpublic data (although public
-            data records will have the mask value set to True). If apply_mask
-            is set to True, only nonpub records will be returned.
+        Args:
+            start (datetime or str, optional): Start time of data request (UTC). Defaults to
+                Jan 1, 1975. String format must be 'YYYY-MM-DD HH:MM:SS'.
+            end (datetime or str, optional): End time of data request (UTC). Defaults to now.
+            vrs (list, optional): List of variable names to retrieve. Defaults to ['waveHs'].
+            pub_set (str, optional): Filter by data quality. Options: 'public', 'nonpub', 'all'.
+            apply_mask (bool, optional): If True, removes masked values. Defaults to True.
         """
         if start is None:
             start = datetime(1975, 1, 1).replace(tzinfo=timezone.utc)
@@ -158,7 +143,14 @@ class CDIPnc:
         self.vrs = vrs
 
     def set_timespan(self, start, end):
-        """Sets request timespan"""
+        """Set the start and end times for the data request.
+
+        Converts string inputs to datetime objects with UTC timezone.
+
+        Args:
+            start (datetime or str): Start time.
+            end (datetime or str): End time.
+        """
         if isinstance(start, str):
             self.start_dt = datetime.strptime(start, "%Y-%m-%d %H:%M:%S").replace(
                 tzinfo=timezone.utc
@@ -176,15 +168,12 @@ class CDIPnc:
         self.end_stamp = cdip_utils.datetime_to_timestamp(self.end_dt)
 
     def get_request(self) -> dict:
-        """Returns the data specified using set_request_info.
+        """Retrieve requested data as a dictionary of masked arrays.
 
-        RETURNS
-        -------
-        A dictionary containing keys of the requested variables each
-        of which is a numpy masked array of data values. In addition,
-        the time values are returned as well. For example, if waveHs
-        was requested, the dictionary will look like this:
-        {'waveHs': <np.masked_array>, 'waveTime': <np.masked_array>}
+        Returns:
+            dict: Keys are variable names and time arrays. Values are numpy masked arrays
+                of data values.
+                Example: {'waveHs': <np.ma.masked_array>, 'waveTime': <np.ma.masked_array>}
         """
         mask_results = {}
         save = {}
@@ -292,8 +281,16 @@ class CDIPnc:
             return arr
 
     def make_pub_mask(self, anc_name: str, s_idx: int, e_idx: int) -> np.ndarray:
-        """Returns an np.ndarray of bools given pub_set and ancillary var"""
+        """Generate a boolean mask array based on the publication flag.
 
+        Args:
+            anc_name (str): Name of the ancillary variable.
+            s_idx (int): Start index.
+            e_idx (int): End index.
+
+        Returns:
+            np.ndarray: Boolean array for public/non-public filtering.
+        """
         # No s_idx, use whole array. Otherwise time subset the anc var.
         nc_primary = self.get_var(anc_name)
         if s_idx is None:
@@ -325,9 +322,13 @@ class CDIPnc:
             return np.ma.make_mask(primary_flag_values < 0, shrink=False)
 
     def get_pub_set(self, name: str) -> str:
-        """Returns either 'public', 'nonpub' or 'all'.
+        """Standardize publication set name.
 
-        Maintains backwards compatibility with prior pub_set names.
+        Args:
+            name (str): Input publication set name.
+
+        Returns:
+            str: One of 'public', 'nonpub', or 'all'.
         """
         if name is None or name not in self.pub_set_map.keys():
             return self.pub_set_default
@@ -335,7 +336,14 @@ class CDIPnc:
             return self.pub_set_map[name]
 
     def get_var_prefix(self, var_name: str) -> str:
-        """Returns 'wave' part of the string 'waveHs'."""
+        """Extract prefix from a variable name (e.g., 'wave' from 'waveHs').
+
+        Args:
+            var_name (str): Variable name.
+
+        Returns:
+            str: Prefix string.
+        """
         s = ""
         for c in var_name:
             if c.isupper():
@@ -344,11 +352,25 @@ class CDIPnc:
         return s
 
     def get_flag_meanings(self, flag_name: str) -> list:
-        """Returns flag category values and meanings given a flag_name."""
+        """Get flag meanings for a variable.
+
+        Args:
+            flag_name (str): Flag variable name.
+
+        Returns:
+            list: List of flag meanings.
+        """
         return self.get_var(flag_name).flag_meanings.split(" ")
 
     def get_flag_values(self, flag_name: str) -> list:
-        """Returns flag category values and meanings given a flag_name."""
+        """Get flag values for a variable.
+
+        Args:
+            flag_name (str): Flag variable name.
+
+        Returns:
+            list: List of flag values.
+        """
         v = self.get_var(flag_name)
         if flag_name[0:3] == "gps":
             return v.flag_masks
@@ -356,15 +378,27 @@ class CDIPnc:
             return v.flag_values
 
     def get_date_modified(self) -> datetime:
-        """Returns the time the nc file was last modified."""
+        """Get the last modification date of the NetCDF file.
+
+        Returns:
+            datetime: Date and time the file was last modified.
+        """
         return datetime.strptime(self.nc.date_modified, "%Y-%m-%dT%H:%M:%SZ")
 
     def get_coverage_start(self) -> datetime:
-        """Returns the start time of the nc file data coverage."""
+        """Get the start time of data coverage in the NetCDF file.
+
+        Returns:
+            datetime: Start of coverage.
+        """
         return datetime.strptime(self.nc.time_coverage_start, "%Y-%m-%dT%H:%M:%SZ")
 
     def get_coverage_end(self) -> datetime:
-        """Returns the end time of the nc file data coverage."""
+        """Get the end time of data coverage in the NetCDF file.
+
+        Returns:
+            datetime: End of coverage.
+        """
         return datetime.strptime(self.nc.time_coverage_end, "%Y-%m-%dT%H:%M:%SZ")
 
     def __get_indices(self, times: list, start_stamp: int, end_stamp: int) -> tuple:
@@ -375,6 +409,15 @@ class CDIPnc:
         return s_idx, e_idx
 
     def get_nc(self, url: str = None, retry: bool = False) -> netCDF4.Dataset:
+        """Open a NetCDF dataset, optionally retrying on failure.
+
+        Args:
+            url (str, optional): Path or URL to NetCDF file. Defaults to self.url.
+            retry (bool, optional): Retry once if opening fails.
+
+        Returns:
+            netCDF4.Dataset or None: Dataset object if successful, else None.
+        """
         if not url:
             url = self.url
         try:
@@ -395,6 +438,14 @@ class CDIPnc:
             return None
 
     def byte_arr_to_string(self, b_arr: np.ma.masked_array) -> str:
+        """Convert a masked array of bytes to a string.
+
+        Args:
+            b_arr (np.ma.masked_array): Masked array of bytes.
+
+        Returns:
+            str: Concatenated string.
+        """
         if np.ma.is_masked(b_arr):
             b_arr = b_arr[~b_arr.mask]
         s = ""
@@ -403,26 +454,34 @@ class CDIPnc:
         return s
 
     def metaStationName(self) -> str:
-        """Returns the metaStationName."""
+        """Get the station name from metadata.
+
+        Returns:
+            str: Station name, or None if dataset not loaded.
+        """
         if self.nc is None:
             return None
         return self.byte_arr_to_string(self.nc.variables["metaStationName"][:])
 
     def get_var(self, var_name: str):
-        """Checks if a variable exists then returns a pointer to it."""
+        """Return the NetCDF variable object if it exists.
+
+        Args:
+            var_name (str): Variable name.
+
+        Returns:
+            netCDF4.Variable or None: Variable object or None.
+        """
         if self.nc is None or var_name not in self.nc.variables:
             return None
         return self.nc.variables[var_name]
 
     def get_dataset_urls(self) -> dict:
-        """Returns a dict of two lists of urls (or paths) to all CDIP station datasets.
+        """Retrieve URLs or paths for all CDIP datasets for the station.
 
-        The top level keys are 'realtime' and 'historic'. The urls are retrieved by
-        either descending into the THREDDS catalog.xml or recursively walking through data_dir sub
-        directories.
-
-        For applications that need to use the data from multiple deployment files for
-        a station, stndata:get_nc_files will load those files efficiently.
+        Returns:
+            dict: Dictionary with keys 'realtime' and 'archive', each containing
+                a list of dataset URLs or local paths.
         """
         if self.data_dir is not None:
             result = {"realtime": [], "archive": []}
@@ -478,43 +537,45 @@ class CDIPnc:
     def set_dataset_info(
         self, stn: str, org: str, dataset_name: str, deployment: int = None
     ) -> None:
-        """Sets self.stn, org, filename, url and loads self.nc. The key to understanding all of
-        this is that we are ultimately setting _url_, which can be an actual path to the
-        nc file or a url to THREDDS DoDS service.
+        """
+        Sets `self.stn`, `self.org`, `self.filename`, `self.url` and loads `self.nc`.
+        The key to understanding all of this is that we are ultimately setting `_url_`,
+        which can be an actual path to the nc file or a URL to a THREDDS DODS service.
 
-        PARAMETERS
-        ----------
-        stn : str
-           Can be in 3char (e.g. 028) or 5char (e.g. 028p2) format for org=cdip
-        org: str
-            (Organization) Values are: cdip|ww3|external
-        dataset_name : str
-            Values: realtime|historic|archive|realtimexy|archivexy|
-                    predeploy|moored|offsite|recovered
-        deployment : int [optional]
-            Supply this to access specific station deployment data.
-            Must be >= 1.
+        Args:
+            stn (str): Station identifier. Can be in 3-char (e.g., "028") or 5-char (e.g., "028p2") format for org="cdip".
+            org (str): Organization. Values are "cdip", "ww3", or "external".
+            dataset_name (str): Dataset name. Values include: "realtime", "historic", "archive", "realtimexy", "archivexy",
+            "predeploy", "moored", "offsite", "recovered".
+            deployment (int, optional): Supply this to access specific station deployment data. Must be >= 1.
 
-        Paths are:
-            <top_dir>/EXTERNAL/WW3/<filename>  [filename=<stn>_<org_dir>_<dataset_name>.nc][CDIP stn like 192w3]
-            <top_dir>/REALTIME/<filename> [filename=<stn><p1>_rt.nc]
-            <top_dir>/REALTIME/<filename> [filename=<stn><p1>_xy.nc]
-            <top_dir>/ARCHIVE/<stn>/<filename> [filename=<stn3><p1>_<deployment>.nc]
-            <top_dir>/PREDEPLOY/<stn>/<filename> [filename=<stn3><pX>_<deployment>_rt.nc]**
-            <top_dir>/PREDEPLOY/<stn>/<filename> [filename=<stn3><pX>_<deployment>_xy.nc]**
+        Notes:
+            Paths:
+                - <top_dir>/EXTERNAL/WW3/<filename>
+                    [filename = <stn>_<org_dir>_<dataset_name>.nc] (CDIP station like 192w3)
+                - <top_dir>/REALTIME/<filename>
+                    [filename = <stn><p1>_rt.nc]
+                - <top_dir>/REALTIME/<filename>
+                    [filename = <stn><p1>_xy.nc]
+                - <top_dir>/ARCHIVE/<stn>/<filename>
+                    [filename = <stn3><p1>_<deployment>.nc]
+                - <top_dir>/PREDEPLOY/<stn>/<filename>
+                    [filename = <stn3><pX>_<deployment>_rt.nc]
+                - <top_dir>/PREDEPLOY/<stn>/<filename>
+                    [filename = <stn3><pX>_<deployment>_xy.nc]
 
-            **Active deployment directories are PREDEPLOY (p0), MOORED (p1), OFFSITE (p2)  and RECOVERED (p3)
-              pX = p0|p1|p2|p3; deployment = dXX e.g. d01
+            Active deployment directories are PREDEPLOY (p0), MOORED (p1), OFFSITE (p2), and RECOVERED (p3).
+            Here, pX = p0|p1|p2|p3; deployment = dXX (e.g., d01).
 
-        Urls are:
-            http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<org_dir>/<filename>
-               [org1=external|cdip,org_dir=WW3|OWI etc]
-            http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<dataset_name>/<filename>
+        URLs:
+            - http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<org_dir>/<filename>
+            [org1 = external|cdip, org_dir = WW3|OWI etc]
+            - http://thredds.cdip.ucsd/thredds/dodsC/<org1>/<dataset_name>/<filename>
 
-            Note:
-               Since adding dataset_name, we no longer need the 5char stn id
-               for org=cdip datasets. The p_val will be 'p1' for every dataset except
-               active datasets in buoy states predeploy (p0), offsite (p2) and recovered (p3).
+        Note:
+            Since adding `dataset_name`, we no longer need the 5-char station ID
+            for org="cdip" datasets. The `p_val` will be "p1" for every dataset except
+            active datasets in buoy states: predeploy (p0), offsite (p2), and recovered (p3).
         """
         ext = ".nc"
 
@@ -593,19 +654,17 @@ class CDIPnc:
 
 
 class Latest(CDIPnc):
-    """Loads the latest_3day.nc and has methods for retrieving the data."""
+    """Access the latest 3-day CDIP dataset with retrieval methods for all metadata and variables."""
 
     # Do not apply the mask to get_request calls.
     apply_mask = False
 
     def __init__(self, data_dir: str = None):
-        """PARAMETERS
-        ----------
-        data_dir : str [optional]
-            Either a full path to a directory containing a local directory hierarchy
-            of nc files. E.g. '/project/WNC' or a url to a THREDDS server.
-        """
+        """Initialize Latest instance and load latest_3day.nc.
 
+        Args:
+            data_dir (str, optional): Local path or THREDDS URL.
+        """
         CDIPnc.__init__(self, data_dir)
         self.labels = []  # - Holds stn labels, e.g. '100p1' for this instance
         # Set latest timespan (Latest_3day goes up to 30 minutes beyond now)
@@ -625,7 +684,11 @@ class Latest(CDIPnc):
         self.nc = self.get_nc(self.url)
 
     def metaStationNames(self) -> list:
-        """Get list of latest station names."""
+        """Retrieve a list of station names from the latest dataset.
+
+        Returns:
+            list: Station names.
+        """
         if self.nc is None:
             return None
         names = []
@@ -634,7 +697,11 @@ class Latest(CDIPnc):
         return names
 
     def metaSiteLabels(self) -> list:
-        """Sets and returns self.labels, a list of station labels, e.g. ['100p1',...]."""
+        """Retrieve site labels for the stations (e.g., '100p1').
+
+        Returns:
+            list: Site labels.
+        """
         if self.nc is None:
             return None
         for label_arr in self.nc.variables["metaSiteLabel"]:
@@ -642,7 +709,11 @@ class Latest(CDIPnc):
         return self.labels
 
     def metaDeployLabels(self) -> list:
-        """Returns a list of metaDeployLabels."""
+        """Retrieve deployment labels for the stations.
+
+        Returns:
+            list: Deployment labels.
+        """
         if self.nc is None:
             return None
         labels = []
@@ -651,7 +722,11 @@ class Latest(CDIPnc):
         return labels
 
     def metaDeployNumbers(self) -> list:
-        """Returns a list of metaDeployNumbers."""
+        """Retrieve deployment numbers for the stations.
+
+        Returns:
+            list: Deployment numbers.
+        """
         if self.nc is None:
             return None
         numbers = []
@@ -660,7 +735,11 @@ class Latest(CDIPnc):
         return numbers
 
     def metaWMOids(self) -> list:
-        """Returns a list of WMO ids, e.g. ['46225',...]."""
+        """Retrieve WMO IDs for the stations.
+
+        Returns:
+            list: WMO IDs.
+        """
         if self.nc is None:
             return None
         labels = []
@@ -669,7 +748,11 @@ class Latest(CDIPnc):
         return labels
 
     def metaLatitudes(self) -> list:
-        """Returns a list of station latitudes, e.g. [23.4,...]."""
+        """Retrieve latitudes for the stations.
+
+        Returns:
+            list: Latitudes.
+        """
         if self.nc is None:
             return None
         lats = []
@@ -678,7 +761,11 @@ class Latest(CDIPnc):
         return lats
 
     def metaLongitudes(self) -> list:
-        """Returns a list of station longitudes, e.g. [23.4,...]."""
+        """Retrieve longitudes for the stations.
+
+        Returns:
+            list: Longitudes.
+        """
         if self.nc is None:
             return None
         lons = []
@@ -687,7 +774,11 @@ class Latest(CDIPnc):
         return lons
 
     def metaWaterDepths(self) -> list:
-        """Returns a list of station water depths."""
+        """Retrieve water depths for the stations.
+
+        Returns:
+            list: Water depths.
+        """
         if self.nc is None:
             return None
         depths = []
@@ -702,20 +793,24 @@ class Latest(CDIPnc):
         params: list = None,
         array_format=True,
     ) -> list:
-        """
-        By default, array_format = True, it will return a dictionary of numpy masked
-        arrays of the latest requested parameters as well as metadata information.
+        """Retrieve the latest station data and metadata.
 
-        If array_format = False, it returns a list of dicts. Each dict will contain
-        latest station data and metadata.
+        Args:
+            pub_set (str, optional): Data quality filter. Options are 'public', 'nonpub', or 'all'. Defaults to 'public'.
+            meta_vars (list, optional): List of metadata variable names to include. If None, uses default metadata variables.
+            params (list, optional): List of parameter variable names to include. If None, uses default parameters.
+            array_format (bool, optional): If True, returns a dictionary of numpy masked arrays for each variable.
+            If False, returns a list of dictionaries, one per station. Defaults to True.
 
-        Parameter data values that are masked or non-existant are set to np.nan.
-        Time values (e.g. 'waveTime') for the wave data if masked or non-existant
-        are set to None.
+        Returns:
+            dict or list: If array_format is True, returns a dictionary where keys are variable names and values are numpy masked arrays.
+            If array_format is False, returns a list of dictionaries, each containing latest station data and metadata.
 
-        Both meta_vars and params if None (or not included in the argument list) will
-        return default sets of meta_vars and parameters. If meta_vars and params are set
-        just those will be returned.
+        Notes:
+            - Parameter data values that are masked or non-existent are set to np.nan.
+            - Time values (e.g., 'waveTime') for wave data that are masked or non-existent are set to None.
+            - If both meta_vars and params are None, default sets are used.
+            - If meta_vars and params are provided, only those variables are returned.
         """
 
         # Use these if params (or meta_vars) is None
@@ -901,18 +996,14 @@ class Active(CDIPnc):
         org: str = None,
     ):
         """
-        PARAMETERS
-        ----------
-        stn : str
-           Can be in 2, 3 or 5 char format e.g. 28, 028, 028p2
-        active_state_key : str
-            Values: predeploy|moored|offsite|recovered
-        deployment : int [optional]
-            Supply this to access specific station deployment data.
-            Must be >= 1.
-        data_dir : str [optional]
-            Either a full path to a directory containing a local directory hierarchy
-            of nc files. E.g. '/project/WNC' or a url to a THREDDS server.
+        Initialize Active dataset.
+
+        Args:
+            stn (str): Station identifier (2, 3, or 5 char format, e.g., '28', '028', '028p2').
+            deployment (int): Deployment number (>=1) to access specific station deployment data.
+            active_state_key (str): One of 'predeploy', 'moored', 'offsite', 'recovered'.
+            data_dir (str, optional): Full path to local directory hierarchy of nc files or THREDDS server URL.
+            org (str, optional): Organization identifier.
         """
         CDIPnc.__init__(self, data_dir)
         self.set_dataset_info(stn, org, active_state_key, deployment)
@@ -923,7 +1014,14 @@ class Realtime(CDIPnc):
     """Loads the realtime nc file for the given station."""
 
     def __init__(self, stn: str, data_dir: str = None, org: str = None):
-        """For parameters: See CDIPnc.set_dataset_info."""
+        """
+        Initialize Realtime dataset.
+
+        Args:
+            stn (str): Station identifier.
+            data_dir (str, optional): Directory containing NetCDF files or URL to THREDDS server.
+            org (str, optional): Organization identifier.
+        """
         CDIPnc.__init__(self, data_dir)
         self.set_dataset_info(stn, org, "realtime")
 
@@ -932,8 +1030,14 @@ class Historic(CDIPnc):
     """Loads the historic nc file for a given station."""
 
     def __init__(self, stn, data_dir=None, org=None):
-        """For parameters see CDIPnc.set_dataset_info."""
+        """
+        Initialize Historic dataset.
 
+        Args:
+            stn (str): Station identifier.
+            data_dir (str, optional): Directory containing NetCDF files or URL to THREDDS server.
+            org (str, optional): Organization identifier.
+        """
         CDIPnc.__init__(self, data_dir)
         self.set_dataset_info(stn, org, "historic")
 
@@ -945,7 +1049,15 @@ class Archive(CDIPnc):
     """Loads an archive (deployment) file for a given station and deployment."""
 
     def __init__(self, stn, deployment=None, data_dir=None, org=None):
-        """For parameters see CDIPnc.set_dataset_info."""
+        """
+        Initialize Archive dataset.
+
+        Args:
+            stn (str): Station identifier.
+            deployment (int or str, optional): Deployment number or string identifier (e.g., 'd02'). Defaults to 1.
+            data_dir (str, optional): Directory containing NetCDF files or URL to THREDDS server.
+            org (str, optional): Organization identifier.
+        """
         CDIPnc.__init__(self, data_dir)
         if not deployment:
             deployment = 1
@@ -970,7 +1082,15 @@ class Archive(CDIPnc):
         return t0 - d + i / r
 
     def get_xyz_timestamp(self, xyzIndex: int) -> int:
-        """Returns the timestamp corresponding to the given xyz array index."""
+        """
+        Get the timestamp corresponding to a given xyz array index.
+
+        Args:
+            xyzIndex (int): Index in xyz array.
+
+        Returns:
+            int or None: Timestamp for the xyz index, or None if unavailable.
+        """
         t0 = self.get_var("xyzStartTime")[0]
         r = self.get_var("xyzSampleRate")[0]
         # Mark I will have filter delay set to fill value
@@ -982,8 +1102,14 @@ class Archive(CDIPnc):
             return None
 
     def get_request(self):
-        """Overrides the base class method to handle xyz data requests."""
+        """
+        Retrieve requested data from the dataset.
 
+        Overrides base class method to handle xyz data requests.
+
+        Returns:
+            dict: Dictionary of requested data arrays.
+        """
         # If not an xyz request, use base class version
         if self.get_var_prefix(self.vrs[0]) != "xyz":
             return super(Archive, self).get_request()
@@ -1019,12 +1145,14 @@ class ActiveXY(Archive):
 
     def __init__(self, stn, deployment, dataset, data_dir=None, org=None):
         """
-        PARAMETERS
-            ----------
-            dataset : str
-                Active dataset name.
-                Values are: predeploy|moored|offsite|recovered.
-            For other parameters see CDIPnc.set_dataset_info.
+        Initialize ActiveXY dataset.
+
+        Args:
+            stn (str): Station identifier.
+            deployment (int or str): Deployment number or string identifier.
+            dataset (str): Active dataset name ('predeploy', 'moored', 'offsite', 'recovered').
+            data_dir (str, optional): Directory containing NetCDF files or URL to THREDDS server.
+            org (str, optional): Organization identifier.
         """
         CDIPnc.__init__(self, data_dir)
         self.set_dataset_info(stn, org, dataset + "xy", deployment)
@@ -1035,6 +1163,13 @@ class RealtimeXY(Archive):
     """Loads the realtime xy nc file for the given station."""
 
     def __init__(self, stn, data_dir=None, org=None):
-        """For parameters see CDIPnc.set_dataset_info."""
+        """
+        Initialize RealtimeXY dataset.
+
+        Args:
+            stn (str): Station identifier.
+            data_dir (str, optional): Directory containing NetCDF files or URL to THREDDS server.
+            org (str, optional): Organization identifier.
+        """
         CDIPnc.__init__(self, data_dir)
         self.set_dataset_info(stn, org, "realtimexy")

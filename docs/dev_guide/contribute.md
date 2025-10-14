@@ -9,8 +9,8 @@ Thank you for considering making a contribution to CDIPpy! We welcome all types 
 ## Setting up your git workflow
 This project uses a fork-and-pull-request workflow. You will need to make your [fork](https://github.com/cdipsw/CDIPpy/fork) of the repository to work in, and submit changes to CDIPpy via pull request. To set up your workflow, follow these instructions:
 
-1. Fork the respository at [https://github.com/cdipsw/CDIPpy/fork](https://github.com/cdipsw/CDIPpy/fork)
-2. Clone the repository from  your fork `git clone https://github.com/{your_github_username}/CDIPpy.git` - this will add your own fork as your `origin` remote repo. *Note: If you already have the main fork cloned, skip to the next step and follow instuctions to add your fork as another remote.*
+1. Fork the repository at [https://github.com/cdipsw/CDIPpy/fork](https://github.com/cdipsw/CDIPpy/fork)
+2. Clone the repository from  your fork `git clone https://github.com/{your_github_username}/CDIPpy.git` - this will add your own fork as your `origin` remote repo. *Note: If you already have the main fork cloned, skip to the next step and follow instructions to add your fork as another remote.*
 3. Add the main fork as another remote (or your fork, if you cloned from the main fork). This will allow you to pull latest code from the main fork, but push your own development to your own fork:  
 ```bash
 git add remote cdip https://github.com/cdipsw/CDIPpy.git
@@ -26,21 +26,21 @@ git checkout main # make sure this is cdip/main not your fork
 git pull
 git checkout -b example-branch
 ```
-This will create a new branch called `example-branch` based on the lastest commit to `main`. Now you can start making your changes.  
+This will create a new branch called `example-branch` based on the latest commit to `main`. Now you can start making your changes.  
 
 Any changes you plan to contribute should be sure to follow the project's style guide, testing structure, and be up-to-date with documentation.
 
 ### linting
-First you'll need to make sure your code style matches the rest of `cdippy` by using the `flake8` linter to check for adherance to the [PEP8](https://peps.python.org/pep-0008/) style guide:  
+First you'll need to make sure your code style matches the rest of `cdippy` by using the `flake8` linter to check for adherence to the [PEP8](https://peps.python.org/pep-0008/) style guide:  
 ```bash
 flake8 .
 ```
-If this commnad is successful, your style is up to date! Otherwise, the output will indicate where in the project the style is not compliant. You can manually fix these style deviations, or use  a tool like [`black`](https://black.readthedocs.io/en/stable/) to autolint: 
+If this command is successful, your style is up to date! Otherwise, the output will indicate where in the project the style is not compliant. You can manually fix these style deviations, or use  a tool like [`black`](https://black.readthedocs.io/en/stable/) to autolint: 
 ```bash
 black .  
 ```
 
-This project also provides a [`pre-commit`](https://pre-commit.com/) hook to manage style for you autmatically on every `git commit`. From  the porject root:
+This project also provides a [`pre-commit`](https://pre-commit.com/) hook to manage style for you automatically on every `git commit`. From  the project root:
 ```bash
 pre-commit install
 ```

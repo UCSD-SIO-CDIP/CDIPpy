@@ -4,22 +4,24 @@ from cdippy.stndata import StnData
 
 
 class NcStats(StnData):
-    """For a given station, produces data availability.
+    """Produces data availability statistics for a given station.
 
-    There are methods to return counts for the entire station record to be
-    used diretly by a web app, and there are methods to save to disk availabililty
-    counts (e.g. xyz counts) for individual nc files. In that case updates
-    to totals would be calculated by re-summarizing any files that have changed
-    and adding up all the files to produce new totals.
+    This class provides methods to:
+        * Return counts for the entire station record, intended for use by web applications.
+        * Save availability counts (e.g., xyz counts) for individual NetCDF files.
+          Updates to totals are calculated by re-summarizing any files that have changed
+          and aggregating all files to produce new totals.
     """
 
     QC_flags = ["waveFlagPrimary", "sstFlagPrimary", "gpsStatusFlags"]
 
     def __init__(self, stn: str, data_dir: str = None):
-        """
-        PARAMETERS: See StnData
-        """
+        """Initializes an NcStats instance.
 
+        Args:
+            stn (str): Station identifier.
+            data_dir (str, optional): Path to the data directory. Defaults to None.
+        """
         StnData.__init__(self, stn, data_dir)
 
         self.date_modifieds = {}
@@ -28,14 +30,26 @@ class NcStats(StnData):
         self.pub_set = "all"
 
     def make_stats(self) -> dict:
-        """Returns various statistics off the given station."""
+        """Computes station-level statistics.
+
+        Returns:
+            dict: A dictionary containing:
+                - "flag_counts" (dict): Flag count summaries for the station.
+                - "deployments" (dict): Deployment summary statistics.
+        """
         result = {}
         result["flag_counts"] = self.flag_counts()
         result["deployments"] = self.deployment_summary()
         return result
 
     def deployment_summary(self) -> dict:
-        """Returns deployment summary statistics."""
+        """Generates deployment summary statistics.
+
+        Returns:
+            dict: A dictionary containing:
+                - Deployment IDs as keys, with values containing start and end coverage times.
+                - "number_of_deployments" (int): The number of deployments.
+        """
         self.load_nc_files()
         result = {}
         dep_cnt = 0
@@ -54,11 +68,26 @@ class NcStats(StnData):
         return result
 
     def load_nc_files(self, types: list = ["realtime", "historic", "archive"]) -> dict:
-        """Returns netCDF4 objects of a station's netcdf files"""
+        """Loads NetCDF files for the station.
+
+        Args:
+            types (list, optional): List of file categories to load. Defaults to
+                ["realtime", "historic", "archive"].
+
+        Returns:
+            dict: Dictionary of NetCDF file objects keyed by filename.
+        """
         self.nc_files = self.get_nc_files(types)
 
     def load_file(self, nc_filename: str):
-        """Sets self.nc for a given nc_filename"""
+        """Loads a specific NetCDF file into the instance.
+
+        Args:
+            nc_filename (str): Filename of the NetCDF file.
+
+        Sets:
+            self.nc: Loaded NetCDF file object.
+        """
         if nc_filename in self.nc_files:
             self.nc = self.nc_files[nc_filename]
         else:
@@ -78,7 +107,15 @@ class NcStats(StnData):
         return result
 
     def nc_file_summary(self, nc_filename: str) -> dict:
-        """Returns statistical summaries given an nc file name."""
+        """Computes a summary for a given NetCDF file.
+
+        Args:
+            nc_filename (str): Name of the NetCDF file.
+
+        Returns:
+            dict: Summary statistics for the file, including:
+                - "flag_counts" (dict): Flag count statistics.
+        """
         if self.nc is None:
             self.load_file(nc_filename)
         result = {}
@@ -87,7 +124,17 @@ class NcStats(StnData):
         return result
 
     def flag_counts(self, QC_flags: list = None) -> dict:
-        """Returns pandas dataframe of counts of flag variables for the entire station record."""
+        """Computes counts of flag variables for the entire station record.
+
+        Args:
+            QC_flags (list, optional): List of quality-control flag variable names.
+                Defaults to `self.QC_flags`.
+
+        Returns:
+            dict: A dictionary containing:
+                - "totals" (dict[str, pandas.DataFrame]): Total counts per flag.
+                - "by_month" (dict[str, pandas.DataFrame]): Monthly counts per flag.
+        """
         result = {"totals": {}, "by_month": {}}
         if not QC_flags:
             QC_flags = self.QC_flags
@@ -100,11 +147,26 @@ class NcStats(StnData):
         return result
 
     def total_count(self, cat_var) -> pd.DataFrame:
-        """Returns count totals for a given flag variable."""
+        """Counts totals for a given categorical flag variable.
+
+        Args:
+            cat_var (pandas.Categorical): Categorical flag variable.
+
+        Returns:
+            pandas.DataFrame: DataFrame with counts grouped by category.
+        """
         return pd.DataFrame({"cnt": cat_var}).groupby(cat_var).count()
 
     def by_month_count(self, cat_var, dim: str) -> pd.DataFrame:
-        """Returns pandas dataframe of Counts by month for a given flag variable."""
+        """Counts observations by month for a given flag variable.
+
+        Args:
+            cat_var (pandas.Categorical): Categorical flag variable.
+            dim (str): Dimension name prefix for the time variable.
+
+        Returns:
+            pandas.DataFrame: DataFrame with counts grouped by month and flag value.
+        """
         df = pd.DataFrame(
             {"cnt": cat_var}, index=pd.to_datetime(self.data[dim + "Time"], unit="s")
         )

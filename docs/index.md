@@ -4,7 +4,7 @@ CDIPpy is python library for navigating and accessing products provided by the [
 A goal of publishing this library as an open source, contributable package is to foster closer collaboration between CDIP and the community of users.
 
 ## Navigating these docs
-The CDIP user community spans a brooad expertise and vastly different backgrounds in python development and usage - use the following guidelines to determine where to start in the documentation:  
+The CDIP user community spans a broad expertise and vastly different backgrounds in python development and usage - use the following guidelines to determine where to start in the documentation:  
 
 * If you are relatively comfortable working with python, visit the [Quickstart Guide](quickstart.md).
 * If you would like more explicit, step-by-step instructions for:
