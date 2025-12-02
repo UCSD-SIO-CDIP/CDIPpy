@@ -1,14 +1,15 @@
 """Methods for working with urllib scraping web pages"""
 
 import logging
-import tomllib
+
+# import tomllib
 from urllib import request, error
 import xml.etree.ElementTree as ET
 
-with open("pyproject.toml", "rb") as f:
-    pyproject = tomllib.load(f)
+# with open("pyproject.toml", "rb") as f:
+#     pyproject = tomllib.load(f)
 
-version = pyproject["project"]["version"]
+version = "0.1.0"  # pyproject["project"]["version"]
 cdippy_lib = f"CDIPpy/{version}"
 
 _headers = {"User-Agent": cdippy_lib}
